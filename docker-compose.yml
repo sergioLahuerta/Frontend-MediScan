@@ -1,0 +1,11 @@
+services:
+  frontend:
+    build:
+      context: ./vue-app
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - ./vue-app:/app
+      - /app/node_modules
+    restart: always
