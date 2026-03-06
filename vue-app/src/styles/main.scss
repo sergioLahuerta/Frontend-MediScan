@@ -1,0 +1,326 @@
+// ==========================================
+// MAIN STYLES - MediScan Vue App
+// ==========================================
+
+// Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+// Variables
+$color-primary: #159a8e;
+$color-primary-dark: #0f8b81;
+$color-primary-light: #e8faf7;
+$color-secondary: #f5f7fa;
+$color-white: #ffffff;
+$color-text: #1f2937;
+$color-text-light: #6b7280;
+$color-text-lighter: #9ca3af;
+$color-border: #e5e7eb;
+$color-accent: #ff6b6b;
+$bg-light: #f9fafb;
+$radius: 12px;
+$shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+
+// ==========================================
+// RESET Y BASE
+// ==========================================
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  color: $color-text;
+  background-color: $color-white;
+  -webkit-font-smoothing: antialiased;
+}
+
+// ==========================================
+// UTILITIES
+// ==========================================
+.section-title {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  color: $color-text;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.section-subtitle {
+  font-size: 1.1rem;
+  color: $color-text-light;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, $color-primary, $color-primary-dark);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// ==========================================
+// HERO SECTION
+// ==========================================
+.hero-section {
+  background: linear-gradient(135deg, $color-primary-light 0%, rgba($color-primary, 0.05) 50%, $color-white 100%);
+  padding: 5rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba($color-primary, 0.05) 0%, transparent 60%);
+    animation: pulse 6s ease-in-out infinite;
+  }
+
+  @media (min-width: 768px) {
+    padding: 7rem 2rem;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+// ==========================================
+// SERVICE CARD
+// ==========================================
+.service-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: $shadow-lg !important;
+  }
+}
+
+.card-icon-wrapper {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  background: $color-primary-light;
+  font-size: 2rem;
+}
+
+// ==========================================
+// HOW IT WORKS - STEPS
+// ==========================================
+.step-card {
+  text-align: center;
+
+  .step-number {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: $color-primary;
+    color: $color-white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 auto 1.5rem;
+    box-shadow: 0 4px 15px rgba($color-primary, 0.35);
+  }
+}
+
+// ==========================================
+// STATS
+// ==========================================
+.stats-section {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+  padding: 4rem 2rem;
+  color: $color-white;
+
+  .stat-item {
+    text-align: center;
+
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 1rem;
+      opacity: 0.85;
+      margin-top: 0.5rem;
+    }
+    .stat-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+  }
+}
+
+// ==========================================
+// ROADMAP
+// ==========================================
+.roadmap-item {
+  border-left: 4px solid $color-border;
+  padding-left: 1.5rem;
+  position: relative;
+  margin-bottom: 2rem;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: $color-primary;
+    border: 3px solid $color-white;
+    box-shadow: 0 0 0 2px $color-primary;
+  }
+
+  &--completed { border-left-color: $color-primary; }
+  &--in-progress { border-left-color: $color-accent; }
+  &--planned { border-left-color: $color-border; }
+}
+
+// ==========================================
+// UPLOAD AREA
+// ==========================================
+.upload-area {
+  border: 2px dashed $color-border;
+  border-radius: $radius;
+  padding: 3rem 2rem;
+  text-align: center;
+  background: $bg-light;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover, &--active {
+    border-color: $color-primary;
+    background: $color-primary-light;
+  }
+}
+
+// ==========================================
+// CONTACT FORM
+// ==========================================
+.contact-info-card {
+  background: $bg-light;
+  border-radius: $radius;
+  padding: 1.5rem;
+
+  .info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+
+    .info-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: $color-primary;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+  }
+}
+
+// ==========================================
+// BOTTOM NAV (MOBILE)
+// ==========================================
+.bottom-nav-mobile {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: $color-white;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-top: 1px solid $color-border;
+  box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.08);
+  z-index: 900;
+  padding-bottom: env(safe-area-inset-bottom);
+
+  @media (min-width: 960px) {
+    display: none;
+  }
+
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: $color-text-lighter;
+    font-size: 10px;
+    gap: 2px;
+    transition: color 0.2s;
+    cursor: pointer;
+
+    &--active { color: $color-primary; }
+
+    .nav-circle {
+      position: absolute;
+      top: -28px;
+      background: $color-primary;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba($color-primary, 0.4);
+      border: 4px solid $color-white;
+    }
+
+    &--main {
+      position: relative;
+      overflow: visible;
+      margin-top: -30px;
+    }
+  }
+}
+
+// ==========================================
+// ANIMATIONS
+// ==========================================
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.slide-up-enter-active {
+  transition: all 0.4s ease-out;
+}
+.slide-up-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}

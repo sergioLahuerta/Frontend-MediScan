@@ -1,0 +1,115 @@
+.services-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: "Inter", sans-serif;
+}
+.services-container .page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+.services-container .page-header h1 {
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+.services-container .page-header .nav-tabs {
+  display: inline-flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.services-container .page-header .nav-tabs button {
+  padding: 0.5rem 1.5rem;
+  background: #159a8e;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  opacity: 0.8;
+  cursor: pointer;
+}
+.services-container .page-header .nav-tabs button.active, .services-container .page-header .nav-tabs button:hover {
+  opacity: 1;
+  font-weight: bold;
+}
+.services-container .simulator-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+@media (max-width: 768px) {
+  .services-container .simulator-layout {
+    grid-template-columns: 1fr;
+  }
+}
+.services-container .simulator-layout .input-column .warning-box {
+  background-color: #ecfdf5;
+  border-left: 4px solid #159a8e;
+  padding: 1rem;
+  border-radius: 4px;
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  color: #09403b;
+}
+.services-container .simulator-layout .input-column .upload-area {
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+  padding: 4rem 2rem;
+  text-align: center;
+  background: #f9fafb;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+.services-container .simulator-layout .input-column .upload-area:hover {
+  border-color: #159a8e;
+  background: #f0fdfa;
+}
+.services-container .simulator-layout .input-column .upload-area img {
+  width: 50px;
+  margin-bottom: 1rem;
+  opacity: 0.6;
+}
+.services-container .simulator-layout .input-column .upload-area h4 {
+  margin-bottom: 0.5rem;
+}
+.services-container .simulator-layout .input-column .upload-area p {
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+.services-container .simulator-layout .input-column .btn-analyze {
+  background-color: #159a8e;
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+  width: 100%;
+  margin-top: 1.5rem;
+  font-size: 1.1rem;
+}
+.services-container .simulator-layout .input-column .btn-analyze:hover {
+  background-color: #117a71;
+}
+.services-container .simulator-layout .results-column {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+}
+.services-container .simulator-layout .results-column .empty-state {
+  color: #6b7280;
+}
+.services-container .simulator-layout .results-column .empty-state .brain-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+/*# sourceMappingURL=simulator.css.map */

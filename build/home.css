@@ -1,0 +1,121 @@
+.home-container {
+  font-family: "Inter", sans-serif;
+}
+.home-container .hero {
+  text-align: center;
+  padding: 5rem 1rem;
+}
+.home-container .hero h1 {
+  font-size: 2.5rem;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+.home-container .hero .badge {
+  background-color: #159a8e;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+.home-container .hero .btn-cta {
+  background-color: #159a8e;
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.home-container .hero .btn-cta:hover {
+  background-color: #117a71;
+}
+.home-container .services-section {
+  padding: 3rem 5%;
+}
+.home-container .services-section h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.home-container .services-section .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+.home-container .services-section .grid .card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 2rem;
+  transition: transform 0.2s;
+}
+.home-container .services-section .grid .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+.home-container .services-section .grid .card .icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+.home-container .services-section .grid .card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+.home-container .services-section .grid .card p {
+  color: #6b7280;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.home-container .how-it-works {
+  background-color: #159a8e;
+  color: #ffffff;
+  padding: 4rem 1rem;
+  text-align: center;
+}
+.home-container .how-it-works .steps-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 4rem;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+}
+.home-container .how-it-works .steps-wrapper .step {
+  max-width: 250px;
+}
+.home-container .how-it-works .steps-wrapper .step .step-icon {
+  font-size: 2rem;
+  border: 2px solid white;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+.home-container .roadmap {
+  padding: 4rem 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.home-container .roadmap .roadmap-item {
+  border: 1px solid #159a8e;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #ffffff;
+}
+.home-container .roadmap .roadmap-item.planned {
+  border-color: #fbbf24;
+  background: #fffbeb;
+}
+.home-container .roadmap .roadmap-item .status-icon {
+  font-size: 1.5rem;
+}
+
+/*# sourceMappingURL=home.css.map */

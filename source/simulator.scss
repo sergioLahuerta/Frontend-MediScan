@@ -1,0 +1,106 @@
+// services.scss
+@import 'variables';
+
+
+.services-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Inter', sans-serif;
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+
+    h1 { margin-bottom: 1rem; color: $text-dark; }
+    
+    .nav-tabs {
+      display: inline-flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      
+      button {
+        padding: 0.5rem 1.5rem;
+        background: $primary-color;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        opacity: 0.8;
+        cursor: pointer;
+        
+        &.active, &:hover { opacity: 1; font-weight: bold; }
+      }
+    }
+  }
+
+  .simulator-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+
+    // Columna Izquierda (Upload)
+    .input-column {
+      .warning-box {
+        background-color: #ecfdf5; // Light green background
+        border-left: 4px solid $primary-color;
+        padding: 1rem;
+        border-radius: 4px;
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
+        color: darken($primary-color, 20%);
+      }
+
+      .upload-area {
+        border: 2px dashed #d1d5db;
+        border-radius: $radius;
+        padding: 4rem 2rem;
+        text-align: center;
+        background: $bg-light;
+        cursor: pointer;
+        transition: border-color 0.3s;
+
+        &:hover { border-color: $primary-color; background: #f0fdfa; }
+
+        img { width: 50px; margin-bottom: 1rem; opacity: 0.6; }
+        h4 { margin-bottom: 0.5rem; }
+        p { color: $text-gray; font-size: 0.85rem; }
+      }
+
+      .btn-analyze {
+        @include btn-primary;
+        width: 100%;
+        margin-top: 1.5rem;
+        font-size: 1.1rem;
+      }
+    }
+
+    // Columna Derecha (Resultados)
+    .results-column {
+      background: $bg-light;
+      border-radius: $radius;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+      text-align: center;
+
+      .empty-state {
+        color: $text-gray;
+        
+        .brain-icon {
+          font-size: 3rem;
+          margin-bottom: 1rem;
+          display: block;
+        }
+      }
+    }
+  }
+}

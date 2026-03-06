@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contacta con MediScan - Medical Diagnosis with AI">
+    <title>MediScan - Medical Diagnosis with AI</title>
+    <link rel="stylesheet" href="./build/contact.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header__container">
+            <a href="index.html" class="header__logo">
+                <img src="./img/logo.png" class="header__logo-size" alt="Logo de MediScan">
+                <span class="header__logo-text">MediScan</span>
+            </a>
+
+            <nav class="header__nav">
+                <a href="index.html" class="header__nav-link">Home</a>
+                <a href="simulator.html" class="header__nav-link">Services</a>
+                <a href="contact.html" class="header__nav-link header__nav-link--active">Contact</a>
+            </nav>
+
+            <button class="header__cta" onclick="location.assign('./simulator.html')">Try AI</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Hero Section -->
+        <section class="contact-hero">
+            <div class="contact-hero__container">
+                <h1 class="contact-hero__title">Get in Touch</h1>
+                <p class="contact-hero__description">Do you have any questions or suggestions? We are here to help you.
+                </p>
+
+                <!-- Tabs -->
+                <div class="contact-tabs">
+                    <button class="contact-tabs__button contact-tabs__button--active" data-tab="contact">
+                        Contact
+                    </button>
+                    <button class="contact-tabs__button" data-tab="appointment">
+                        Schedule Appointment
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Form Section -->
+        <section class="contact-section">
+            <div class="contact-section__container">
+                <!-- Contact Information Column -->
+                <aside class="contact-info">
+                    <!-- Contact Information Card -->
+                    <article class="contact-info__card">
+                        <h2 class="contact-info__title">Contact Information</h2>
+
+                        <!-- Direction -->
+                        <div class="contact-info__item">
+                            <div class="contact-info__icon contact-info__icon--location">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path
+                                        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                                </svg>
+                            </div>
+                            <div class="contact-info__content">
+                                <h3 class="contact-info__subtitle">Direction</h3>
+                                <p class="contact-info__text">Calle Medicina 123, Piso 4<br>28001 Madrid, España</p>
+                            </div>
+                        </div>
+
+                        <!-- Phones -->
+                        <div class="contact-info__item">
+                            <div class="contact-info__icon contact-info__icon--phone">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path
+                                        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                                </svg>
+                            </div>
+                            <div class="contact-info__content">
+                                <h3 class="contact-info__subtitle">Phones</h3>
+                                <p class="contact-info__text">
+                                    General: +34 91 123 45 67<br>
+                                    Emergency: +34 600 123 456<br>
+                                    International: +34 91 987 65 43
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Emails -->
+                        <div class="contact-info__item">
+                            <div class="contact-info__icon contact-info__icon--email">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                                </svg>
+                            </div>
+                            <div class="contact-info__content">
+                                <h3 class="contact-info__subtitle">Emails</h3>
+                                <p class="contact-info__text">
+                                    General: info@mediscan.com<br>
+                                    Support: soporte@mediscan.com<br>
+                                    Sales: sales@mediscan.com
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Hours -->
+                        <div class="contact-info__item">
+                            <div class="contact-info__icon contact-info__icon--hours">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                            </div>
+                            <div class="contact-info__content">
+                                <h3 class="contact-info__subtitle">Schedule</h3>
+                                <p class="contact-info__text">
+                                    Mon - Fri: 9:00 - 20:00<br>
+                                    Saturday: 9:00 - 14:00<br>
+                                    Sunday: 9:00 - 13:00
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Support Channels Card -->
+                    <article class="contact-info__card contact-info__card--support">
+                        <h2 class="contact-info__title">Support Channels</h2>
+
+                        <ul class="contact-info__support-list">
+                            <li class="contact-info__support-item">
+                                <svg class="contact-info__support-icon" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                                </svg>
+                                <span>Live Chat</span>
+                            </li>
+                            <li class="contact-info__support-item">
+                                <svg class="contact-info__support-icon" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="1" />
+                                    <path
+                                        d="M12 19v2m0-18v2M5 12H3m18 0h-2M7.05 7.05L5.636 5.636m12.728 12.728L16.95 16.95M7.05 16.95l-1.414 1.414m12.728-12.728L16.95 7.05" />
+                                </svg>
+                                <span>Help Center</span>
+                            </li>
+                            <li class="contact-info__support-item">
+                                <svg class="contact-info__support-icon" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <path d="M12 16v-4m0-4h.01" />
+                                </svg>
+                                <span>FAQ</span>
+                            </li>
+                        </ul>
+                    </article>
+                </aside>
+
+                <!-- Contact Form Column -->
+                <section class="contact-form">
+                    <h2 class="contact-form__title">Send us a message</h2>
+
+                    <form class="contact-form__form" action="#" method="POST">
+                        <!-- Full Name & Email Row -->
+                        <div class="contact-form__row">
+                            <div class="contact-form__group">
+                                <label for="fullname" class="contact-form__label">Full Name <span
+                                        class="contact-form__required">*</span></label>
+                                <input type="text" id="fullname" class="contact-form__input" placeholder="Full Name"
+                                    required>
+                            </div>
+                            <div class="contact-form__group">
+                                <label for="email" class="contact-form__label">Email <span
+                                        class="contact-form__required">*</span></label>
+                                <input type="email" id="email" class="contact-form__input" placeholder="your@email.com"
+                                    required>
+                            </div>
+                        </div>
+
+                        <!-- Reason & Subject Row -->
+                        <div class="contact-form__row">
+                            <div class="contact-form__group">
+                                <label for="reason" class="contact-form__label">Reason <span
+                                        class="contact-form__required">*</span></label>
+                                <select id="reason" class="contact-form__select" required>
+                                    <option value="" hidden selected >Choose category</option>
+                                    <option value="technical">Technical Support</option>
+                                    <option value="sales">Sales Inquiry</option>
+                                    <option value="general">General Question</option>
+                                    <option value="feedback">Feedback</option>
+                                </select>
+                            </div>
+                            <div class="contact-form__group">
+                                <label for="subject" class="contact-form__label">Subject <span
+                                        class="contact-form__required">*</span></label>
+                                <input type="text" id="subject" class="contact-form__input"
+                                    placeholder="Message subject" required>
+                            </div>
+                        </div>
+
+                        <!-- Message -->
+                        <div class="contact-form__group contact-form__group--full">
+                            <label for="message" class="contact-form__label">Message <span
+                                    class="contact-form__required">*</span></label>
+                            <textarea id="message" class="contact-form__textarea"
+                                placeholder="Describe your issue..." rows="5" required></textarea>
+                        </div>
+
+                        <!-- Response Time Info -->
+                        <div class="contact-form__info">
+                            <svg class="contact-form__info-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z" />
+                            </svg>
+                            <span class="contact-form__info-text">Estimated response time: 24-48 business hours. For
+                                urgent inquiries, please call our customer service number.</span>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="contact-form__submit">
+                            <svg class="contact-form__submit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M12 5v14M5 12h14" />
+                            </svg>
+                            Submit
+                        </button>
+                    </form>
+                </section>
+            </div>
+        </section>
+
+        <!-- Location Section -->
+        <section class="contact-location">
+            <div class="contact-location__container">
+                <h2 class="contact-location__title">Our Location</h2>
+                <div class="contact-location__map">
+                    <svg class="contact-location__map-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 2C7.58 2 4 5.58 4 10c0 5.25 8 14 8 14s8-8.75 8-14c0-4.42-3.58-8-8-8zm0 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z" />
+                    </svg>
+                    <p class="contact-location__map-label">Interactive Map</p>
+                    <p class="contact-location__map-address">Calle Medicina 123, Madrid</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Other Ways to Contact Section -->
+        <section class="contact-channels">
+            <div class="contact-channels__container">
+                <h2 class="contact-channels__title">Other Ways to Contact Us</h2>
+
+                <div class="contact-channels__grid">
+                    <!-- WhatsApp -->
+                    <article class="contact-channel">
+                        <div class="contact-channel__icon contact-channel__icon--whatsapp">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                <path fill="#25D366"
+                                    d="M20.52 3.48A11.968 11.968 0 0012 0C5.373 0 0 5.373 0 12c0 2.123.554 4.157 1.607 5.964L0 24l6.174-1.62A11.953 11.953 0 0012 24c6.627 0 12-5.373 12-12 0-3.205-1.247-6.219-3.48-8.52z" />
+                                <path fill="#FFF"
+                                    d="M17.894 14.836c-.27-.135-1.598-1.007-1.846-1.122-.248-.116-.428-.174-.608.135-.18.31-1.013 1.007-1.238 1.218-.225.211-.45.237-.72.103-.27-.135-1.139-.42-2.169-1.338-.803-.715-1.345-1.598-1.502-1.868-.158-.27-.017-.416.118-.551.122-.123.27-.31.405-.465.135-.155.18-.27.27-.465.09-.195.045-.36-.023-.495-.068-.135-.608-1.462-.833-2.003-.218-.524-.44-.453-.608-.462-.158-.009-.338-.009-.518-.009-.18 0-.473.068-.72.338-.248.27-.945.923-.945 2.25 0 1.328.967 2.61 1.102 2.79.135.18 1.905 2.91 4.613 4.08 1.102.476 1.96.761 2.628.973.645.206 1.232.177 1.698.107.518-.078 1.598-.653 1.823-1.283.225-.63.225-1.17.158-1.283-.068-.113-.248-.174-.518-.31z" />
+                            </svg>
+                        </div>
+                        <h3 class="contact-channel__name">WhatsApp</h3>
+                        <p class="contact-channel__description">+34 600 123 456</p>
+                    </article>
+
+                    <!-- Social Networks -->
+                    <article class="contact-channel">
+                        <div class="contact-channel__icon contact-channel__icon--social">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="currentColor">
+                                <path
+                                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                            </svg>
+                        </div>
+                        <h3 class="contact-channel__name">Social Networks</h3>
+                        <p class="contact-channel__description">@MediScan</p>
+                    </article>
+
+                    <!-- Newsletter -->
+                    <article class="contact-channel">
+                        <div class="contact-channel__icon contact-channel__icon--newsletter">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="currentColor">
+                                <path
+                                    d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                            </svg>
+                        </div>
+                        <h3 class="contact-channel__name">Newsletter</h3>
+                        <p class="contact-channel__description">Subscribe Now</p>
+                    </article>
+
+                    <!-- Support Hours -->
+                    <article class="contact-channel">
+                        <div class="contact-channel__icon contact-channel__icon--support">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
+                            </svg>
+                        </div>
+                        <h3 class="contact-channel__name">Mon - Sun Support</h3>
+                        <p class="contact-channel__description">All Days</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer__container">
+            <div class="footer__column">
+                <h3 class="footer__title">MediScan</h3>
+                <p class="footer__description">Revolutionizing medical diagnostics with AI and 3D visualization</p>
+            </div>
+
+            <div class="footer__column">
+                <h4 class="footer__heading">Links</h4>
+                <nav class="footer__nav">
+                    <a href="home/index.html" class="footer__link">Home</a>
+                    <a href="simulator.html" class="footer__link">Services</a>
+                    <a href="contact.html" class="footer__link">Contact</a>
+                </nav>
+            </div>
+
+            <div class="footer__column">
+                <h4 class="footer__heading">Contact</h4>
+                <nav class="footer__nav">
+                    <a href="mailto:info@mediscandid.com" class="footer__link">info@mediscan.com</a>
+                    <a href="tel:+34911234567" class="footer__link">+34 91 123 45 67</a>
+                    <p class="footer__text">Zaragoza, Spain</p>
+                </nav>
+            </div>
+
+            <div class="footer__column">
+                <h4 class="footer__heading">Legal</h4>
+                <nav class="footer__nav">
+                    <a href="#" class="footer__link">Privacy</a>
+                    <a href="#" class="footer__link">Terms & Conditions</a>
+                    <a href="#" class="footer__link">Cookies</a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="footer__copyright">
+            <p class="footer__p">&copy; 2025 MediScan. All rights reserved.</p>
+        </div>
+    </footer>
+   <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav__item">
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+         <span>Inicio</span>
+        </a>
+  
+        <a href="simulator.html" class="bottom-nav__item">
+         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+         <span>Servicios</span>
+        </a>
+
+        <a href="simulator.html" class="bottom-nav__item bottom-nav__item--main">
+         <div class="bottom-nav__circle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+         </div>
+        </a>
+
+        <a href="#" class="bottom-nav__item">
+         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+            <span>Informes</span>
+        </a>
+
+        <a href="contact.html" class="bottom-nav__item bottom-nav__item--active">
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+         <span>Perfil</span>
+        </a>
+  </nav>
+</body>
+
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MediScan - Medical Diagnosis with AI">
+  <title>MediScan - Medical Diagnosis with AI</title>
+  <link rel="stylesheet" href="./build/simulator.css">
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header__container">
+      <a href="index.html" class="header__logo">
+        <img src="./img/logo.png" class="header__logo-size" alt="Logo de MediScan">
+        <span class="header__logo-text">MediScan</span>
+      </a>
+
+      <nav class="header__nav">
+        <a href="index.html" class="header__nav-link">Home</a>
+        <a href="#" class="header__nav-link">Services</a>
+        <a href="contact.html" class="header__nav-link">Contact</a>
+      </nav>
+
+      <button class="header__cta">Try AI</button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+    <!-- HERO SECTION -->
+    <section class="hero">
+      <div class="hero__container">
+        <h1 class="hero__title">Intelligent Medical Analysis</h1>
+        <p class="hero__description">Explore our advanced diagnostic services and visualization tools</p>
+
+        <div class="hero__tabs">
+          <button class="hero__tab hero__tab--active">
+            AI Simulator
+          </button>
+          <button class="hero__tab">
+            3D Models
+          </button>
+          <button class="hero__tab">
+            Compare Symptoms
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SIMULATOR SECTION -->
+    <section class="simulator">
+      <div class="simulator__container">
+        <!-- LEFT COLUMN: FORM -->
+        <article class="simulator__form-wrapper">
+          <div class="simulator__header">
+            <div class="simulator__icon-circle">
+              <span class="simulator__icon"><svg xmlns="http://www.w3.org/2000/svg" width="35" height="25" viewBox="0 0 14 14" fill="#ffffff"><g fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round"><path d="M4.62 1.438A2.38 2.38 0 0 1 7 3.818v6.47a2.724 2.724 0 1 1-5.439-.228C.994 9.45.636 8.26.636 7.265c0-1.354.665-2.67 1.617-3.189A2.38 2.38 0 0 1 4.62 1.438"/><path d="M3.511 5.694c-.35-.08-1.141-.599-1.26-1.611M4.97 8.365C6.398 8.205 6.963 6.699 7 6.086M2.29 8.632c-.356.28-.64.917-.731 1.427M9.38 1.438A2.38 2.38 0 0 0 7 3.818v6.47a2.724 2.724 0 1 0 5.439-.228c.567-.61.924-1.8.924-2.795c0-1.354-.664-2.67-1.617-3.189A2.38 2.38 0 0 0 9.38 1.438"/><path d="M10.489 5.694c.35-.08 1.141-.599 1.26-1.611M9.03 8.365C7.602 8.205 7.037 6.699 7 6.086m4.71 2.546c.356.28.64.917.731 1.427"/></g></svg></span>
+            </div>
+            <div>
+              <h2 class="simulator__title">AI Diagnostic Simulator</h2>
+              <p class="simulator__subtitle">Upload an image for analysis</p>
+            </div>
+          </div>
+
+          <!-- WARNING BANNER -->
+          <div class="simulator__alert">
+            <span class="simulator__alert-icon">⚠️</span>
+            <p class="simulator__alert-text">This is an educational simulator. The results do not constitude a real medical diagnosis. Always consult with a healthcare professional.</p>
+          </div>
+
+          <!-- DRAG DROP AREA -->
+          <div class="simulator__dropzone">
+            <div class="simulator__dropzone-icon">📤</div>
+            <h3 class="simulator__dropzone-title">Click to upload an image</h3>
+            <p class="simulator__dropzone-text">PNG, JPG up to 10MB</p>
+            <input type="file" class="simulator__file-input" accept=".png,.jpg,.jpeg" hidden>
+          </div>
+
+          <!-- SUBMIT BUTTON -->
+          <button class="simulator__button">Analyze with AI</button>
+        </article>
+
+        <!-- RIGHT COLUMN: RESULTS -->
+        <article class="simulator__results-wrapper">
+          <h2 class="simulator__results-title">Analysis Results</h2>
+          <div class="simulator__results-empty">
+            <div class="simulator__results-icon">🧠</div>
+            <p class="simulator__results-text">Upload an image and click on "Analyze with AI" to see the results</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__container">
+      <!-- Column 1: Brand -->
+      <div class="footer__column">
+        <h3 class="footer__column-title">MediScan</h3>
+        <p class="footer__column-text">Revolutionizing medical diagnosis with AI and 3D visualization</p>
+      </div>
+
+      <!-- Column 2: Links -->
+      <div class="footer__column">
+        <h3 class="footer__column-title">Links</h3>
+        <ul class="footer__list">
+          <li><a href="index.html" class="footer__link">Home</a></li>
+          <li><a href="simulator.html" class="footer__link">Services</a></li>
+          <li><a href="contact.html" class="footer__link">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3: Contact -->
+      <div class="footer__column">
+        <h3 class="footer__column-title">Contact</h3>
+        <ul class="footer__list">
+          <li><a href="mailto:info@mediscan3d.com" class="footer__link">info@mediscan.com</a></li>
+          <li><a href="tel:+34911234567" class="footer__link">+34 91 123 45 67</a></li>
+          <li><span class="footer__text">Zaragoza, Spain</span></li>
+        </ul>
+      </div>
+
+      <!-- Column 4: Legal -->
+      <div class="footer__column">
+        <h3 class="footer__column-title">Legal</h3>
+        <ul class="footer__list">
+          <li><a href="#" class="footer__link">Privacy</a></li>
+          <li><a href="#" class="footer__link">Terms & Conditions</a></li>
+          <li><a href="#" class="footer__link">Cookies</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="footer__copyright">
+      <p class="footer__p">&copy; 2025 MediScan. All rights reserved.</p>
+    </div>
+  </footer>
+  <nav class="bottom-nav">
+    <a href="index.html" class="bottom-nav__item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+     <span>Inicio</span>
+    </a>
+  
+    <a href="simulator.html" class="bottom-nav__item">
+     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      <span>Servicios</span>
+   </a>
+
+    <a href="simulator.html" class="bottom-nav__item bottom-nav__item--main bottom-nav__item--active">
+     <div class="bottom-nav__circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+     </div>
+   </a>
+
+   <a href="#" class="bottom-nav__item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+     <span>Informes</span>
+    </a>
+
+    <a href="contact.html" class="bottom-nav__item">
+     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+     <span>Perfil</span>
+    </a>
+  </nav>
+</body>
+</html>
