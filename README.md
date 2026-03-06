@@ -38,4 +38,4 @@ Para acceder y probar las funcionalidades de la aplicación, utiliza las siguien
 - `index.html`, `simulator.html`, `contact.html`: Versión estática original (legado).
 
 ---
-© 2025 MediScan. Todos los derechos reservados.
+© 2026 MediScan. Todos los derechos reservados.

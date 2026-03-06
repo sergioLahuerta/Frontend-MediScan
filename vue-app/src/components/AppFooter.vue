@@ -36,7 +36,7 @@
       <v-divider color="grey-darken-3" />
 
       <div class="text-center py-4 footer-copy">
-        &copy; 2025 MediScan. All rights reserved.
+        &copy; 2026 MediScan. All rights reserved.
       </div>
     </v-container>
   </v-footer>

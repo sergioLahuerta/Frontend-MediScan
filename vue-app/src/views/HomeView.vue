@@ -244,7 +244,7 @@ export default {
       ],
       roadmap: [
         {
-          title: 'Q4 2025 — Initial Release',
+          title: 'Q4 2026 — Initial Release',
           description: 'Initial release of AI platform, 3D models, and diagnostic comparison system.',
           status: 'completed',
           statusLabel: '✓ Completed',
