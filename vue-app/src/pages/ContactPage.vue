@@ -163,9 +163,82 @@
                   Schedule an Appointment
                 </v-card-title>
                 <v-card-text class="pa-6">
-                   <p class="mb-6 text-medium-emphasis">Select a date and time for your medical consultation.</p>
-                   <v-date-picker color="primary" min="2026-03-07" width="100%" class="mb-4" />
-                   <v-btn block color="primary" size="large" rounded="lg">Confirm Date</v-btn>
+                   <p class="mb-6 text-medium-emphasis">Select a professional, date and time for your medical consultation.</p>
+                   
+                   <v-form ref="appointmentForm" v-model="appointmentValid" @submit.prevent="confirmAppointment">
+                     <v-select
+                       v-model="booking.professionalId"
+                       label="Select Professional"
+                       :items="professionals"
+                       item-title="name"
+                       item-value="id"
+                       prepend-inner-icon="mdi-doctor"
+                       :rules="[rules.required]"
+                       :loading="loadingProfessionals"
+                       placeholder="Choose a doctor"
+                       variant="outlined"
+                       density="comfortable"
+                       class="mb-4"
+                     />
+
+                     <v-row>
+                       <v-col cols="12" sm="7">
+                         <v-menu v-model="dateMenu" :close-on-content-click="false">
+                           <template v-slot:activator="{ props }">
+                             <v-text-field
+                               v-bind="props"
+                               label="Date"
+                               v-model="booking.date"
+                               prepend-inner-icon="mdi-calendar"
+                               readonly
+                               variant="outlined"
+                               density="comfortable"
+                               :rules="[rules.required]"
+                             />
+                           </template>
+                           <v-date-picker
+                             v-model="booking.dateObj"
+                             color="primary"
+                             @update:model-value="onDateSelected"
+                             :min="today"
+                           />
+                         </v-menu>
+                       </v-col>
+                       <v-col cols="12" sm="5">
+                         <v-select
+                           v-model="booking.time"
+                           label="Time"
+                           :items="timeSlots"
+                           prepend-inner-icon="mdi-clock-outline"
+                           variant="outlined"
+                           density="comfortable"
+                           :rules="[rules.required]"
+                         />
+                       </v-col>
+                     </v-row>
+
+                     <v-textarea
+                       v-model="booking.notes"
+                       label="Notes (Optional)"
+                       placeholder="Symptoms or reason for visit"
+                       variant="outlined"
+                       rows="2"
+                       prepend-inner-icon="mdi-note-text-outline"
+                       class="mb-4"
+                     />
+
+                     <v-btn 
+                       block 
+                       color="primary" 
+                       size="large" 
+                       rounded="lg" 
+                       type="submit"
+                       :loading="isBooking"
+                       :disabled="!appointmentValid"
+                     >
+                       Confirm Appointment
+                     </v-btn>
+                   </v-form>
                 </v-card-text>
               </v-card>
             </v-fade-transition>
@@ -201,17 +274,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted, watch } from 'vue'
 import { useAppStore } from '@/stores/appStore'
+import { useAuthStore } from '@/stores/authStore'
 import AppHeader from '@/components/AppHeader.vue'
 import AppFooter from '@/components/AppFooter.vue'
 import BottomNav from '@/components/BottomNav.vue'
+import appointmentService from '@/services/appointmentService'
+import professionalService, { Professional } from '@/services/professionalService'
 
 const activeTab = ref('contact')
 const appStore = useAppStore()
+const authStore = useAuthStore()
 const formValid = ref(false)
+const appointmentValid = ref(false)
 const isSubmitting = ref(false)
+const isBooking = ref(false)
 const contactForm = ref<any>(null)
+const appointmentForm = ref<any>(null)
+
+const today = new Date().toISOString().split('T')[0]
+const dateMenu = ref(false)
 
 const form = reactive({
   firstName: '',
@@ -219,6 +302,22 @@ const form = reactive({
   subject: '',
   message: '',
 })
+
+const booking = reactive({
+  professionalId: '',
+  date: '',
+  dateObj: null as Date | null,
+  time: '',
+  notes: ''
+})
+
+const professionals = ref<Professional[]>([])
+const loadingProfessionals = ref(false)
+const timeSlots = [
+  '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+  '12:00', '12:30', '13:00', '13:30', '16:00', '16:30',
+  '17:00', '17:30', '18:00', '18:30', '19:00', '19:30'
+]
 
 const rules = {
   required: (v: any) => !!v || 'This field is required',
@@ -240,6 +339,41 @@ const contactInfo = [
   { icon: 'mdi-clock-outline', label: 'Schedule', value: 'Mon - Fri: 9:00 - 20:00<br>Sat - Sun: 9:00 - 14:00' },
 ]
 
+onMounted(async () => {
+  loadProfessionals()
+})
+
+watch(activeTab, (newTab) => {
+  if (newTab === 'appointment') {
+    loadProfessionals()
+  }
+})
+
+const loadProfessionals = async () => {
+  if (professionals.value.length > 0) return
+  loadingProfessionals.value = true
+  try {
+    professionals.value = await professionalService.getAll()
+  } catch (err) {
+    console.error('Failed to load professionals', err)
+    // Fallback if API fails or is empty
+    professionals.value = [
+      { id: '1', name: 'Dr. Alejandro García', specialty: 'General Medicine', email: '' },
+      { id: '2', name: 'Dra. María Lopez', specialty: 'Radiology', email: '' }
+    ]
+  } finally {
+    loadingProfessionals.value = false
+  }
+}
+
+const onDateSelected = (val: any) => {
+  if (val) {
+    const d = new Date(val)
+    booking.date = d.toLocaleDateString()
+    dateMenu.value = false
+  }
+}
+
 const submitForm = async () => {
   if (!contactForm.value) return
   const { valid } = await contactForm.value.validate()
@@ -251,6 +385,41 @@ const submitForm = async () => {
 
   appStore.showSnackbar('Message sent successfully! We\'ll get back to you soon.', 'success')
   contactForm.value.reset()
+}
+
+const confirmAppointment = async () => {
+  if (!appointmentForm.value) return
+  const { valid } = await appointmentForm.value.validate()
+  if (!valid) return
+
+  if (!authStore.user?.id) {
+    appStore.showSnackbar('Please login to schedule an appointment', 'error')
+    return
+  }
+
+  isBooking.value = true
+  try {
+    const scheduledAt = new Date(booking.dateObj!)
+    const [hours, minutes] = booking.time.split(':')
+    scheduledAt.setHours(parseInt(hours), parseInt(minutes), 0, 0)
+
+    await appointmentService.create({
+      patientId: authStore.user.id,
+      professionalId: booking.professionalId,
+      scheduledAt: scheduledAt.toISOString(),
+      status: 'Scheduled',
+      notes: booking.notes
+    })
+
+    appStore.showSnackbar('Appointment scheduled successfully!', 'success')
+    activeTab.value = 'contact' // Go back
+    // Reset booking state
+    Object.assign(booking, { professionalId: '', date: '', dateObj: null, time: '', notes: '' })
+  } catch (err: any) {
+    appStore.showSnackbar(err.message || 'Failed to schedule appointment', 'error')
+  } finally {
+    isBooking.value = false
+  }
 }
 </script>
 

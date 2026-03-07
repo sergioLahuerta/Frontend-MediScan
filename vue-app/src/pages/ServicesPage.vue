@@ -5,6 +5,65 @@
     <v-main style="padding-bottom: 80px;">
       <v-container class="services-container py-8">
 
+        <!-- Dashboard Summary Row -->
+        <v-row class="mb-8" justify="center">
+          <!-- Next Appointment Card -->
+          <v-col cols="12" sm="6" md="4">
+            <v-card rounded="xl" elevation="2" border variant="flat" class="dashboard-card h-100">
+              <v-card-text class="pa-4 d-flex align-center">
+                <v-avatar color="primary-lighten-5" size="48" class="mr-4">
+                  <v-icon color="primary">mdi-calendar-clock</v-icon>
+                </v-avatar>
+                <div>
+                  <div class="text-caption text-medium-emphasis font-weight-bold">NEXT APPOINTMENT</div>
+                  <div v-if="loadingDashboard" class="text-body-2 mt-1">
+                    <v-skeleton-loader type="text" width="100" />
+                  </div>
+                  <div v-else-if="nextAppointment" class="text-body-2 font-weight-bold mt-1">
+                    {{ formatDate(nextAppointment.scheduledAt) }}
+                  </div>
+                  <div v-else class="text-body-2 text-medium-emphasis mt-1">No scheduled visits</div>
+                </div>
+              </v-card-text>
+              <v-divider />
+              <v-card-actions class="pa-2 px-4">
+                <v-btn variant="text" size="small" color="primary" block @click="$router.push('/profile')">
+                  View all
+                  <v-icon end size="x-small">mdi-arrow-right</v-icon>
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+
+          <!-- Latest Report Card -->
+          <v-col cols="12" sm="6" md="4">
+            <v-card rounded="xl" elevation="2" border variant="flat" class="dashboard-card h-100">
+              <v-card-text class="pa-4 d-flex align-center">
+                <v-avatar color="warning-lighten-5" size="48" class="mr-4">
+                  <v-icon color="warning">mdi-file-chart-outline</v-icon>
+                </v-avatar>
+                <div>
+                  <div class="text-caption text-medium-emphasis font-weight-bold">LATEST REPORT</div>
+                  <div v-if="loadingDashboard" class="text-body-2 mt-1">
+                    <v-skeleton-loader type="text" width="100" />
+                  </div>
+                  <div v-else-if="latestReport" class="text-body-2 font-weight-bold mt-1">
+                    {{ latestReport.description }}
+                  </div>
+                  <div v-else class="text-body-2 text-medium-emphasis mt-1">No reports yet</div>
+                </div>
+              </v-card-text>
+              <v-divider />
+              <v-card-actions class="pa-2 px-4">
+                <v-btn variant="text" size="small" color="warning" block @click="$router.push('/reports')">
+                  Go to records
+                  <v-icon end size="x-small">mdi-arrow-right</v-icon>
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
+
         <!-- Page Header -->
         <div class="text-center mb-10">
           <h1 class="section-title mb-3">
@@ -262,19 +321,71 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useSimulatorStore } from '@/stores/simulatorStore'
 import { useAppStore } from '@/stores/appStore'
+import { useAuthStore } from '@/stores/authStore'
 import AppHeader from '@/components/AppHeader.vue'
 import AppFooter from '@/components/AppFooter.vue'
 import BottomNav from '@/components/BottomNav.vue'
+import appointmentService, { Appointment } from '@/services/appointmentService'
+import diagnosisService, { Diagnosis } from '@/services/diagnosisService'
 
 const simulatorStore = useSimulatorStore()
 const appStore = useAppStore()
+const authStore = useAuthStore()
 
 const activeTab = ref('upload')
 const isDragOver = ref(false)
 const fileInputRef = ref<HTMLInputElement | null>(null)
+
+// Dashboard data
+const loadingDashboard = ref(false)
+const nextAppointment = ref<Appointment | null>(null)
+const latestReport = ref<Diagnosis | null>(null)
+
+onMounted(() => {
+  fetchDashboardData()
+})
+
+const fetchDashboardData = async () => {
+  if (!authStore.user?.id) return
+  loadingDashboard.value = true
+  try {
+    const [apts, diags] = await Promise.all([
+      appointmentService.getAll(),
+      diagnosisService.getAll()
+    ])
+
+    // Find next upcoming appointment
+    const userApts = apts
+      .filter(a => a.patientId === authStore.user?.id && new Date(a.scheduledAt) > new Date())
+      .sort((a, b) => new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime())
+    
+    nextAppointment.value = userApts[0] || null
+
+    // Find latest report
+    const userDiags = diags
+      .filter(d => d.patientId === authStore.user?.id)
+      .sort((a, b) => new Date(b.diagnosedAt).getTime() - new Date(a.diagnosedAt).getTime())
+    
+    latestReport.value = userDiags[0] || null
+  } catch (err) {
+    console.error('Failed to load dashboard data', err)
+  } finally {
+    loadingDashboard.value = false
+  }
+}
+
+const formatDate = (dateStr: string) => {
+  const d = new Date(dateStr)
+  return d.toLocaleString('es-ES', { 
+    day: 'numeric', 
+    month: 'short', 
+    hour: '2-digit', 
+    minute: '2-digit' 
+  })
+}
 
 const handleFileSelect = (event: Event) => {
   const target = event.target as HTMLInputElement
