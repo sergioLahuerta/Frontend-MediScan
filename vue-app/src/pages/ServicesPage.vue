@@ -119,43 +119,52 @@
                 Always consult a medical professional for official diagnosis.
               </v-alert>
 
-              <!-- Upload Area -->
-              <div
-                class="upload-area mb-4"
-                :class="{ 'upload-area--active': isDragOver || simulatorStore.hasImage }"
-                @dragover.prevent="isDragOver = true"
-                @dragleave="isDragOver = false"
-                @drop.prevent="handleDrop"
-                @click="(fileInputRef as any).click()"
-              >
-                <input
-                  ref="fileInputRef"
-                  type="file"
-                  accept="image/*"
-                  style="display:none"
-                  @change="handleFileSelect"
-                />
-                <!-- Preview Image -->
-                <template v-if="simulatorStore.uploadedImageUrl">
-                  <v-img
-                    :src="simulatorStore.uploadedImageUrl"
-                    max-height="200"
-                    contain
-                    class="mb-3 rounded-lg"
-                  />
-                  <p style="color: #159a8e; font-weight: 500;">
-                    <v-icon>mdi-check-circle</v-icon>
-                    Image ready for analysis
-                  </p>
-                </template>
-                <!-- Placeholder -->
-                <template v-else>
-                  <v-icon size="48" color="grey-lighten-1" class="mb-3">mdi-cloud-upload-outline</v-icon>
-                  <h4 style="font-weight: 600; margin-bottom: 0.5rem;">Drop image here</h4>
-                  <p style="color: #6b7280; font-size: 0.85rem;">
-                    or click to browse — JPG, PNG, DICOM up to 10MB
-                  </p>
-                </template>
+              <!-- Chat Interface like the HTML -->
+              <div class="chat-container">
+                <header class="p-4 border-b bg-primary text-white flex justify-between items-center shadow-sm">
+                  <div>
+                    <h1 class="text-xl font-bold tracking-tight">Health Assistant Pro</h1>
+                    <p class="text-xs opacity-90 font-medium">Soporte al Diagnóstico Temprano</p>
+                  </div>
+                  <span class="text-xs bg-white/20 px-2 py-1 rounded-full border border-white/30">Sesión #{{ simulatorStore.chatSessionId ? 'Activa' : 'Nueva' }}</span>
+                </header>
+
+                <div id="chat-box" class="chat-container overflow-y-auto p-4 space-y-4">
+                  <div v-if="simulatorStore.chatMessages.length === 0" class="flex justify-start">
+                    <div class="message-ai p-3 max-w-[85%] shadow-sm border border-gray-100">
+                      Hola. Estoy listo para asistirle en el análisis clínico. ¿Desea adjuntar una imagen o describir algún síntoma?
+                    </div>
+                  </div>
+                  <div v-for="msg in simulatorStore.chatMessages" :key="msg.id" :class="['flex', msg.sender === 'user' ? 'justify-end' : 'justify-start']">
+                    <div :class="['p-3 max-w-[85%] shadow-sm text-sm leading-relaxed', msg.sender === 'user' ? 'message-user' : 'message-ai']">
+                      {{ msg.text }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="p-4 border-t bg-white">
+                  <div class="flex items-end gap-2 bg-gray-50 p-2 rounded-xl border border-gray-200">
+                    <label class="cursor-pointer p-2 hover:bg-gray-200 rounded-lg transition-colors group">
+                      <input ref="fileInputRef" type="file" class="hidden" accept="image/*" @change="handleFileSelect">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v4m-2-2h4" />
+                      </svg>
+                    </label>
+
+                    <textarea v-model="simulatorStore.chatInput" placeholder="Escriba su consulta..." class="flex-1 p-2 bg-transparent focus:outline-none resize-none min-h-[40px] max-h-[150px] text-gray-700" rows="1" @keydown.enter.prevent="simulatorStore.sendChat()" @input="adjustTextareaHeight"></textarea>
+
+                    <button @click="simulatorStore.sendChat()" class="bg-primary hover:bg-primary-dark text-white p-2 rounded-lg transition-all shadow-md active:scale-95">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                      </svg>
+                    </button>
+                  </div>
+                  <div v-if="simulatorStore.uploadedImageUrl" class="text-[10px] text-primary mt-2 flex items-center gap-1 font-bold italic">
+                    <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span> Imagen lista para procesar
+                  </div>
+                </div>
               </div>
 
               <!-- Analyze Button -->
@@ -393,13 +402,11 @@ const handleFileSelect = (event: Event) => {
   if (file) loadFile(file)
 }
 
-const handleDrop = (event: DragEvent) => {
-  isDragOver.value = false
-  const file = event.dataTransfer?.files[0]
-  if (file && file.type.startsWith('image/')) {
-    loadFile(file)
-  }
-}
+const adjustTextareaHeight = (event: Event) => {
+  const target = event.target as HTMLTextAreaElement;
+  target.style.height = 'auto';
+  target.style.height = target.scrollHeight + 'px';
+};
 
 const loadFile = (file: File) => {
   const url = URL.createObjectURL(file)
@@ -411,6 +418,62 @@ const analyze = async () => {
   appStore.showSnackbar('Analysis complete! Review your results.', 'success')
 }
 </script>
+
+<style scoped>
+.chat-container {
+  height: calc(100vh - 160px);
+}
+
+.message-user {
+  background-color: #159a8e;
+  color: white;
+  border-radius: 15px 15px 2px 15px;
+}
+
+.message-ai {
+  background-color: #f3f4f6;
+  color: #1f2937;
+  border-radius: 15px 15px 15px 2px;
+}
+
+#chat-box {
+  position: relative;
+  height: calc(100vh - 160px);
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+#chat-box::before {
+  content: "";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background-image: url('/logo.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 400px;
+  opacity: 0.4;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#chat-box > div {
+  position: relative;
+  z-index: 1;
+}
+
+#chat-box::-webkit-scrollbar {
+  width: 6px;
+}
+
+#chat-box::-webkit-scrollbar-thumb {
+  background-color: rgba(21, 154, 142, 0.3);
+  border-radius: 10px;
+}
+</style>
 
 <style lang="scss" scoped>
 .results-placeholder {

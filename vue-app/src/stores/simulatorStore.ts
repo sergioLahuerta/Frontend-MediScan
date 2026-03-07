@@ -16,6 +16,12 @@ interface HistoryItem {
   diagnosis: string;
 }
 
+interface ChatMessage {
+  id: number;
+  sender: 'user' | 'ai';
+  text: string;
+}
+
 interface SimulatorState {
   uploadedImage: File | null;
   uploadedImageUrl: string | null;
@@ -23,6 +29,10 @@ interface SimulatorState {
   results: AnalysisResult | null;
   activeTab: string;
   analysisHistory: HistoryItem[];
+  // chat support
+  chatMessages: ChatMessage[];
+  chatInput: string;
+  chatSessionId: string | null;
 }
 
 export const useSimulatorStore = defineStore('simulator', {
@@ -33,6 +43,9 @@ export const useSimulatorStore = defineStore('simulator', {
         results: null,
         activeTab: 'upload',
         analysisHistory: [],
+        chatMessages: [],
+        chatInput: '',
+        chatSessionId: null,
     }),
     getters: {
         hasResults: (state) => state.results !== null,
@@ -84,5 +97,32 @@ export const useSimulatorStore = defineStore('simulator', {
             this.results = null
             this.isAnalyzing = false
         },
+        // chat actions
+        addChatMessage(sender: 'user' | 'ai', text: string) {
+            this.chatMessages.push({ id: Date.now(), sender, text });
+        },
+        async sendChat() {
+            if (!this.chatInput.trim()) return;
+            const text = this.chatInput.trim();
+            this.addChatMessage('user', text);
+            this.chatInput = '';
+
+            // ensure session id
+            if (!this.chatSessionId) {
+                this.chatSessionId = crypto.randomUUID();
+            }
+
+            try {
+                const base64 = this.uploadedImageUrl ? this.uploadedImageUrl.split(',')[1] : null;
+                const resp = await (await import('../services/chatService')).default.process({
+                    chatSessionId: this.chatSessionId,
+                    message: text,
+                    base64Image: base64,
+                });
+                this.addChatMessage('ai', resp.data.response);
+            } catch (err) {
+                this.addChatMessage('ai', 'Error contacting AI');
+            }
+        }
     },
 })
