@@ -42,6 +42,26 @@ const chatService = {
             formData
         );
         return res.data;
+    },
+
+    async getUserSessions(): Promise<any[]> {
+        const res = await apiClient.get<any[]>(`${BASE}/sessions`);
+        return res.data;
+    },
+
+    async deleteSession(sessionId: string): Promise<void> {
+        await apiClient.delete(`${BASE}/${sessionId}`);
+    },
+
+    async getSessionMessages(sessionId: string): Promise<any[]> {
+        const res = await apiClient.get<any[]>(`${BASE}/${sessionId}/messages`);
+        return res.data;
+    },
+
+    async updateSessionTitle(sessionId: string, title: string): Promise<void> {
+        await apiClient.patch(`${BASE}/${sessionId}/title`, JSON.stringify(title), {
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 };
 

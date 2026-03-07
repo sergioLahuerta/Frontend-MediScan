@@ -104,87 +104,194 @@
         <!-- TAB: Upload & Analyze -->
         <div v-if="activeTab === 'upload'">
           <v-row>
-            <!-- Chat Column -->
-            <v-col cols="12" md="10" lg="8" class="mx-auto">
-              <!-- Warning Info -->
-              <v-alert
-                type="info"
-                variant="tonal"
-                border="start"
-                class="mb-5"
-                rounded="lg"
-                density="compact"
-              >
-                <strong>Important:</strong> This tool is for educational purposes only.
-                Always consult a medical professional for official diagnosis.
-              </v-alert>
+            <!-- Chat Row with Sidebar for Sessions -->
+            <v-col cols="12" class="px-0">
+              <v-row no-gutters class="chat-main-row">
+                <!-- Sessions Sidebar (Only for logged in users) -->
+                <v-col v-if="authStore.user" cols="12" md="3" class="chat-sidebar border-e">
+                  <v-card flat class="h-100 d-flex flex-column rounded-0">
+                    <div class="pa-4 d-flex align-center justify-space-between bg-grey-lighten-4">
+                      <span class="text-subtitle-2 font-weight-bold text-primary">Tus Consultas</span>
+                      <v-btn icon="mdi-plus" size="x-small" variant="flat" color="primary" @click="simulatorStore.createNewSession" title="Nueva Consulta"></v-btn>
+                    </div>
+                    <v-divider />
+                    <v-list class="flex-grow-1 overflow-y-auto pa-2" density="comfortable">
+                      <v-list-item 
+                        v-for="session in simulatorStore.sessions" 
+                        :key="session.id"
+                        :active="simulatorStore.chatSessionId === session.id"
+                        active-color="primary"
+                        rounded="lg"
+                        class="mb-2 session-item"
+                        @click="simulatorStore.loadSession(session.id)"
+                      >
+                        <template v-slot:prepend>
+                          <v-icon size="small" :color="simulatorStore.chatSessionId === session.id ? 'primary' : 'grey-darken-1'">mdi-chat-processing-outline</v-icon>
+                        </template>
+                        
+                        <v-list-item-title class="text-body-2 font-weight-medium">
+                          <template v-if="editingSessionId === session.id">
+                            <v-text-field
+                              v-model="editingTitle"
+                              density="compact"
+                              hide-details
+                              variant="underlined"
+                              autofocus
+                              @keyup.enter="saveTitle(session.id)"
+                              @blur="saveTitle(session.id)"
+                              @click.stop
+                            />
+                          </template>
+                          <template v-else>
+                            {{ session.title || 'Consulta' }}
+                          </template>
+                        </v-list-item-title>
+                        <v-list-item-subtitle class="text-caption opacity-70">{{ formatDate(session.startedAt) }}</v-list-item-subtitle>
+                        
+                        <template v-slot:append>
+                          <div class="d-flex ga-1 session-actions">
+                            <v-btn 
+                              icon="mdi-pencil-outline" 
+                              size="x-small" 
+                              variant="text" 
+                              color="grey-darken-1" 
+                              @click.stop="startEditing(session)"
+                            ></v-btn>
+                            <v-btn 
+                              icon="mdi-delete-outline" 
+                              size="x-small" 
+                              variant="text" 
+                              color="error" 
+                              @click.stop="simulatorStore.deleteSession(session.id)"
+                            ></v-btn>
+                          </div>
+                        </template>
+                      </v-list-item>
+                      <div v-if="simulatorStore.sessions.length === 0" class="text-center pa-8">
+                        <v-icon size="large" color="grey-lighten-1" class="mb-2">mdi-history</v-icon>
+                        <div class="text-caption text-medium-emphasis">Historial vacío</div>
+                      </div>
+                    </v-list>
+                  </v-card>
+                </v-col>
 
-              <!-- Chat Interface like the HTML -->
-              <div class="chat-container">
-                <header class="p-4 border-b bg-primary text-white flex justify-between items-center shadow-sm">
-                  <div>
-                    <h1 class="text-xl font-bold tracking-tight">Health Assistant Pro</h1>
-                    <p class="text-xs opacity-90 font-medium">Soporte al Diagnóstico Temprano</p>
-                  </div>
-                  <span class="text-xs bg-white/20 px-2 py-1 rounded-full border border-white/30">Sesión #{{ simulatorStore.chatSessionId ? 'Activa' : 'Nueva' }}</span>
-                </header>
+                <!-- Chat Column -->
+                <v-col cols="12" :md="authStore.user ? 9 : 12" class="chat-content-col pa-0">
+                  <!-- Chat Interface -->
+                  <div class="chat-wrapper d-flex flex-column h-100">
+                    <header class="chat-header pa-4 bg-primary text-white d-flex align-center justify-space-between shadow-sm">
+                      <div>
+                        <div class="text-h6 font-weight-bold leading-tight">Assistant AI Mediscan</div>
+                        <div class="text-caption opacity-90">Soporte al Diagnóstico Médico Inteligente</div>
+                      </div>
+                      <div class="d-flex align-center ga-2">
+                        <v-chip v-if="!authStore.user" size="small" color="white" variant="flat" class="text-primary font-weight-bold" to="/register">
+                          Guardar Historial
+                        </v-chip>
+                        <v-chip size="small" variant="outlined" color="white" class="session-badge">
+                          {{ simulatorStore.chatSessionId ? 'Sesión Activa' : 'Nueva Consulta' }}
+                        </v-chip>
+                      </div>
+                    </header>
 
-              <div class="chat-messages" ref="chatBoxRef">
-                  <div v-if="simulatorStore.chatMessages.length === 0" class="flex justify-start">
-                    <div class="message-ai p-3 max-w-[85%] shadow-sm border border-gray-100">
-                      Hola. Estoy listo para asistirle en el análisis clínico. ¿Desea adjuntar una imagen o describir algún síntoma?
+                    <div class="chat-messages flex-grow-1 overflow-y-auto pa-4" ref="chatBoxRef">
+                      <div v-if="simulatorStore.chatMessages.length === 0" class="d-flex justify-start mb-4">
+                        <div class="message-bubble ai-bubble message-fade-in shadow-sm">
+                          <v-avatar size="32" color="primary-lighten-5" class="mr-3 avatar-ai border">
+                            <v-icon size="18" color="primary">mdi-robot-outline</v-icon>
+                          </v-avatar>
+                          <div>¡Hola! Soy tu asistente médico AI. Puedo analizar imágenes o responder dudas sobre síntomas. ¿En qué puedo ayudarte hoy?</div>
+                        </div>
+                      </div>
+                      <div v-for="msg in simulatorStore.chatMessages" :key="msg.id" :class="['d-flex mb-4', msg.sender === 'user' ? 'justify-end' : 'justify-start']">
+                        <div :class="['message-bubble shadow-sm', msg.sender === 'user' ? 'user-bubble' : 'ai-bubble message-fade-in']">
+                          <div class="d-flex align-start">
+                            <v-avatar v-if="msg.sender === 'ai'" size="32" color="primary-lighten-5" class="mr-3 avatar-ai border">
+                              <v-icon size="18" color="primary">mdi-robot-outline</v-icon>
+                            </v-avatar>
+                            <div class="message-text">
+                              {{ msg.text }}
+                              <v-img v-if="msg.imageUrl" :src="msg.imageUrl" rounded="lg" class="mt-3 chat-image" max-width="320">
+                                <template v-slot:placeholder>
+                                  <v-row class="fill-height ma-0" align="center" justify="center">
+                                    <v-progress-circular indeterminate color="primary-lighten-4"></v-progress-circular>
+                                  </v-row>
+                                </template>
+                              </v-img>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Input Area (Fixed at the bottom) -->
+                    <div class="chat-input-area pa-4 pt-0">
+                      <!-- Guest Warning -->
+                      <v-fade-transition>
+                        <v-alert v-if="simulatorStore.guestLimitReached" type="warning" variant="tonal" density="compact" rounded="lg" class="mb-3 text-caption">
+                          Has alcanzado el límite gratuito. 
+                          <router-link to="/register" class="font-weight-bold">Regístrate</router-link> para seguir.
+                        </v-alert>
+                      </v-fade-transition>
+
+                      <div class="input-card rounded-pill border shadow-sm px-2 py-1 bg-grey-lighten-5" :class="{ 'opacity-50 pointer-events-none': simulatorStore.guestLimitReached }">
+                        <v-row no-gutters align="center">
+                          <v-col cols="auto" class="pl-2">
+                            <v-btn 
+                              icon="mdi-camera" 
+                              variant="flat" 
+                              color="primary-lighten-4" 
+                              class="camera-btn"
+                              size="44"
+                              @click="fileInputRef?.click()"
+                            >
+                              <v-icon color="primary" size="24">mdi-camera</v-icon>
+                              <v-tooltip activator="parent" location="top">Adjuntar Imagen</v-tooltip>
+                            </v-btn>
+                            <input ref="fileInputRef" type="file" class="d-none" accept="image/*" @change="handleFileSelect">
+                          </v-col>
+                          
+                          <v-col class="mx-2">
+                            <v-textarea
+                              v-model="simulatorStore.chatInput"
+                              placeholder="Escribe tu consulta médica..."
+                              rows="1"
+                              auto-grow
+                              hide-details
+                              variant="plain"
+                              density="compact"
+                              class="chat-textarea"
+                              @keydown.enter.prevent="sendChatWithFile"
+                            />
+                          </v-col>
+
+                          <v-col cols="auto">
+                            <v-btn
+                              :loading="simulatorStore.isAnalyzing"
+                              icon="mdi-send-variant"
+                              color="primary"
+                              elevation="2"
+                              class="send-btn"
+                              size="small"
+                              @click="sendChatWithFile"
+                            />
+                          </v-col>
+                        </v-row>
+                      </div>
+                      
+                      <v-expand-transition>
+                        <div v-if="simulatorStore.uploadedImageUrl" class="image-indicator d-flex align-center mt-2 px-4 py-1 rounded-pill bg-primary-lighten-5 text-primary text-caption font-weight-bold">
+                          <v-icon size="16" class="mr-2 animate-pulse">mdi-image-check</v-icon>
+                          <span>Imagen lista para analizar</span>
+                          <v-spacer />
+                          <v-btn icon="mdi-close" size="x-small" variant="text" color="primary" @click="simulatorStore.resetAnalysis()"></v-btn>
+                        </div>
+                      </v-expand-transition>
                     </div>
                   </div>
-                  <div v-for="msg in simulatorStore.chatMessages" :key="msg.id" :class="['flex', msg.sender === 'user' ? 'justify-end' : 'justify-start']">
-                    <div :class="['p-3 max-w-[85%] shadow-sm text-sm leading-relaxed', msg.sender === 'user' ? 'message-user' : 'message-ai']">
-                      <div>{{ msg.text }}</div>
-                      <img v-if="msg.imageUrl" :src="msg.imageUrl" class="max-w-xs mt-2 rounded-lg border border-gray-200 shadow-sm" alt="Uploaded image preview" />
-                    </div>
-                  </div>
-                </div>
-
-                <div class="p-4 border-t bg-white">
-                  <!-- Guest limit banner -->
-                  <v-alert
-                    v-if="simulatorStore.guestLimitReached"
-                    type="warning"
-                    variant="tonal"
-                    border="start"
-                    class="mb-3"
-                    rounded="lg"
-                    density="compact"
-                  >
-                    Límite diario alcanzado.
-                    <router-link to="/register" class="font-weight-bold">Regístrate gratis</router-link>
-                    para continuar sin límites.
-                  </v-alert>
-
-                  <div class="flex items-end gap-2 bg-gray-50 p-2 rounded-xl border border-gray-200" :class="{ 'opacity-50 pointer-events-none': simulatorStore.guestLimitReached }">
-                    <label class="cursor-pointer p-2 hover:bg-gray-200 rounded-lg transition-colors group">
-                      <input ref="fileInputRef" type="file" class="hidden" accept="image/*" @change="handleFileSelect">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v4m-2-2h4" />
-                      </svg>
-                    </label>
-
-                    <textarea v-model="simulatorStore.chatInput" placeholder="Escriba su consulta..." class="flex-1 p-2 bg-transparent focus:outline-none resize-none min-h-[40px] max-h-[150px] text-gray-700" rows="1" @keydown.enter.prevent="sendChatWithFile" @input="adjustTextareaHeight"></textarea>
-
-                    <button @click="sendChatWithFile" class="bg-primary hover:bg-primary-dark text-white p-2 rounded-lg transition-all shadow-md active:scale-95">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                      </svg>
-                    </button>
-                  </div>
-                  <div v-if="simulatorStore.uploadedImageUrl" class="text-[10px] text-primary mt-2 flex items-center gap-1 font-bold italic">
-                    <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span> Imagen lista para procesar
-                  </div>
-                </div>
-              </div>
+                </v-col>
+              </v-row>
             </v-col>
-
-
           </v-row>
         </div>
 
@@ -241,7 +348,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch, nextTick } from 'vue'
 import { useSimulatorStore } from '@/stores/simulatorStore'
 import { useAppStore } from '@/stores/appStore'
 import { useAuthStore } from '@/stores/authStore'
@@ -264,8 +371,41 @@ const loadingDashboard = ref(false)
 const nextAppointment = ref<Appointment | null>(null)
 const latestReport = ref<Diagnosis | null>(null)
 
+// Session Renaming
+const editingSessionId = ref<string | null>(null)
+const editingTitle = ref('')
+
+const startEditing = (session: any) => {
+  editingSessionId.value = session.id
+  editingTitle.value = session.title || 'Consulta'
+}
+
+const saveTitle = async (sessionId: string) => {
+  if (editingSessionId.value === sessionId) {
+    if (editingTitle.value.trim()) {
+      await simulatorStore.updateSessionTitle(sessionId, editingTitle.value.trim())
+    }
+    editingSessionId.value = null
+  }
+}
+
+const chatBoxRef = ref<HTMLElement | null>(null)
+
+const scrollToBottom = async () => {
+  await nextTick()
+  if (chatBoxRef.value) {
+    chatBoxRef.value.scrollTo({
+      top: chatBoxRef.value.scrollHeight,
+      behavior: 'smooth'
+    })
+  }
+}
+
+watch(() => simulatorStore.chatMessages, scrollToBottom, { deep: true })
+
 onMounted(() => {
   fetchDashboardData()
+  simulatorStore.fetchSessions()
 })
 
 const fetchDashboardData = async () => {
@@ -342,74 +482,199 @@ const sendChatWithFile = async () => {
 </script>
 
 <style scoped>
-.chat-container {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #e5e7eb;
-  border-radius: 0 0 12px 12px;
+.chat-main-row {
+  height: 700px;
+  background: white;
+  border-radius: 16px;
   overflow: hidden;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  border: 1px solid #eef2f6;
+  margin-bottom: 2rem;
+}
+
+.chat-sidebar {
+  background: #fcfdfe;
+  height: 100%;
+}
+
+.session-item {
+  transition: all 0.2s ease;
+}
+
+.session-item:hover {
+  background-color: #f1f5f9;
+}
+
+.session-actions {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.session-item:hover .session-actions {
+  opacity: 1;
+}
+
+.chat-wrapper {
+  background-color: #ffffff;
+  height: 100%;
+}
+
+.chat-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+  z-index: 10;
 }
 
 .chat-messages {
-  position: relative;
-  height: 380px;
+  padding: 2rem;
   overflow-y: auto;
-  padding: 1rem;
-}
-
-/* Background logo ONLY inside the messages area */
-.chat-messages::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 240px;
-  height: 240px;
-  background-image: url('/logo.png');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  opacity: 0.12;
-  pointer-events: none;
-}
-
-.chat-messages > div {
-  position: relative;
-  z-index: 1;
+  min-height: 0; /* Important for flex children to scroll */
+  height: 500px; /* Fixed height to force overflow */
+  background-image: radial-gradient(#159a8e0a 1px, transparent 1px);
+  background-size: 24px 24px;
+  display: flex;
+  flex-direction: column;
 }
 
 .chat-messages::-webkit-scrollbar {
   width: 6px;
 }
 
+.chat-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 .chat-messages::-webkit-scrollbar-thumb {
-  background-color: rgba(21, 154, 142, 0.3);
+  background-color: #e2e8f0;
   border-radius: 10px;
 }
 
-.message-user {
-  background-color: #159a8e;
+.chat-messages::-webkit-scrollbar-thumb:hover {
+  background-color: #cbd5e1;
+}
+
+.message-bubble {
+  max-width: 85%;
+  padding: 1rem 1.25rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  border-radius: 20px;
+  position: relative;
+}
+
+.user-bubble {
+  background: linear-gradient(135deg, #159a8e 0%, #117d74 100%);
   color: white;
-  border-radius: 15px 15px 2px 15px;
+  border-bottom-right-radius: 4px;
+  margin-left: auto;
+  box-shadow: 0 4px 12px rgba(21, 154, 142, 0.2);
 }
 
-.message-ai {
-  background-color: #f3f4f6;
-  color: #1f2937;
-  border-radius: 15px 15px 15px 2px;
-}
-</style>
-
-<style lang="scss" scoped>
-.results-placeholder {
-  min-height: 320px;
+.ai-bubble {
+  background-color: #f8fafc;
+  color: #334155;
+  border-bottom-left-radius: 4px;
+  border: 1px solid #edf2f7;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: #f9fafb;
-  border-radius: 12px;
-  padding: 2rem;
+}
+
+.avatar-ai {
+  flex-shrink: 0;
+}
+
+.message-fade-in {
+  animation: fadeInSoft 0.4s ease-out forwards;
+}
+
+@keyframes fadeInSoft {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chat-image {
+  border: 3px solid white;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.chat-image:hover {
+  transform: scale(1.03);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+}
+
+.chat-input-area {
+  background: white;
+  flex-shrink: 0;
+  padding-bottom: 1.25rem !important;
+  border-top: 1px solid #f1f5f9;
+}
+
+.input-card {
+  transition: all 0.3s ease;
+  border: 1px solid #e2e8f0 !important;
+  background-color: white !important; /* Ensure visibility */
+}
+
+.input-card:focus-within {
+  border-color: #159a8e !important;
+  box-shadow: 0 0 0 4px rgba(21, 154, 142, 0.1), 0 4px 12px rgba(0,0,0,0.05) !important;
+}
+
+.chat-textarea :deep(textarea) {
+  font-size: 1rem;
+  color: #334155;
+  line-height: 1.4;
+  padding: 8px 0;
+}
+
+.send-btn {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  transition: all 0.2s ease;
+}
+
+.send-btn:hover {
+  transform: scale(1.1);
+  background-color: #117d74 !important;
+}
+
+.camera-btn {
+  transition: all 0.2s ease;
+  color: #159a8e !important; /* Force visible primary color */
+  background-color: #eff6f5 !important;
+  margin-left: 4px;
+}
+
+.camera-btn:hover {
+  background-color: #eff6f5 !important;
+  color: #159a8e !important;
+  transform: translateY(-1px);
+}
+
+.image-indicator {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .5; }
+}
+
+@media (max-width: 960px) {
+  .chat-main-row {
+    height: calc(100vh - 200px);
+    min-height: 600px;
+  }
 }
 </style>

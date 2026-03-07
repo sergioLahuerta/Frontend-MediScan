@@ -24,6 +24,12 @@ interface ChatMessage {
     imageUrl?: string;
 }
 
+interface SessionInfo {
+    id: string;
+    title: string;
+    startedAt: string;
+}
+
 interface SimulatorState {
     uploadedImage: File | null;
     uploadedImageUrl: string | null;
@@ -36,6 +42,8 @@ interface SimulatorState {
     chatInput: string;
     chatSessionId: string | null;
     guestLimitReached: boolean;
+    sessions: SessionInfo[];
+    isLoadingSessions: boolean;
 }
 
 export const useSimulatorStore = defineStore('simulator', {
@@ -50,6 +58,8 @@ export const useSimulatorStore = defineStore('simulator', {
         chatInput: '',
         chatSessionId: null,
         guestLimitReached: false,
+        sessions: [],
+        isLoadingSessions: false,
     }),
     getters: {
         hasResults: (state) => state.results !== null,
@@ -105,6 +115,59 @@ export const useSimulatorStore = defineStore('simulator', {
         addChatMessage(sender: 'user' | 'ai', text: string, imageUrl?: string) {
             this.chatMessages.push({ id: Date.now(), sender, text, imageUrl })
         },
+        async createNewSession() {
+            try {
+                this.chatSessionId = await chatService.createSession();
+                this.chatMessages = [];
+                await this.fetchSessions(); // Refresh list if logged in
+            } catch (err: any) {
+                console.error("Error creating session", err);
+            }
+        },
+        async fetchSessions() {
+            this.isLoadingSessions = true;
+            try {
+                this.sessions = await chatService.getUserSessions();
+            } catch (err) {
+                console.log("Not logged in or error fetching sessions");
+            } finally {
+                this.isLoadingSessions = false;
+            }
+        },
+        async loadSession(sessionId: string) {
+            this.chatSessionId = sessionId;
+            try {
+                const messages = await chatService.getSessionMessages(sessionId);
+                this.chatMessages = messages.map(m => ({
+                    id: m.id,
+                    sender: m.senderType.toLowerCase() === 'user' ? 'user' : 'ai',
+                    text: m.messageText
+                }));
+            } catch (err) {
+                console.error("Error loading messages", err);
+            }
+        },
+        async deleteSession(sessionId: string) {
+            try {
+                await chatService.deleteSession(sessionId);
+                this.sessions = this.sessions.filter(s => s.id !== sessionId);
+                if (this.chatSessionId === sessionId) {
+                    this.chatSessionId = null;
+                    this.chatMessages = [];
+                }
+            } catch (err) {
+                console.error("Error deleting session", err);
+            }
+        },
+        async updateSessionTitle(sessionId: string, title: string) {
+            try {
+                await chatService.updateSessionTitle(sessionId, title);
+                const session = this.sessions.find(s => s.id === sessionId);
+                if (session) session.title = title;
+            } catch (err) {
+                console.error("Error updating session title", err);
+            }
+        },
         async sendChat(file?: File | null) {
             if (!this.chatInput.trim() && !file) return
             if (this.guestLimitReached) return
@@ -115,10 +178,11 @@ export const useSimulatorStore = defineStore('simulator', {
             this.addChatMessage('user', text || (file ? 'Imagen enviada para análisis clínico' : ''), imgUrl)
             this.chatInput = ''
 
-            // Create session on first message
+            // Create session on first message if none exists
             if (!this.chatSessionId) {
                 try {
                     this.chatSessionId = await chatService.createSession()
+                    await this.fetchSessions(); // Refresh for logged in users
                 } catch {
                     this.addChatMessage('ai', 'No se pudo iniciar la sesión. Verifica que el servidor esté activo.')
                     return
