@@ -39,10 +39,7 @@ const chatService = {
 
         const res = await apiClient.post<SendMessageResponse>(
             `${BASE}/${sessionId}/send`,
-            formData,
-            {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            }
+            formData
         );
         return res.data;
     }

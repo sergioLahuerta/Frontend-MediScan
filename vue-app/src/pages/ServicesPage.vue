@@ -104,8 +104,8 @@
         <!-- TAB: Upload & Analyze -->
         <div v-if="activeTab === 'upload'">
           <v-row>
-            <!-- Left: Upload Column -->
-            <v-col cols="12" md="6">
+            <!-- Chat Column -->
+            <v-col cols="12" md="10" lg="8" class="mx-auto">
               <!-- Warning Info -->
               <v-alert
                 type="info"
@@ -137,7 +137,8 @@
                   </div>
                   <div v-for="msg in simulatorStore.chatMessages" :key="msg.id" :class="['flex', msg.sender === 'user' ? 'justify-end' : 'justify-start']">
                     <div :class="['p-3 max-w-[85%] shadow-sm text-sm leading-relaxed', msg.sender === 'user' ? 'message-user' : 'message-ai']">
-                      {{ msg.text }}
+                      <div>{{ msg.text }}</div>
+                      <img v-if="msg.imageUrl" :src="msg.imageUrl" class="max-w-xs mt-2 rounded-lg border border-gray-200 shadow-sm" alt="Uploaded image preview" />
                     </div>
                   </div>
                 </div>
@@ -183,85 +184,7 @@
               </div>
             </v-col>
 
-            <!-- Right: Results Column -->
-            <v-col cols="12" md="6">
-              <!-- Loading State -->
-              <div v-if="simulatorStore.isAnalyzing" class="results-placeholder text-center">
-                <v-progress-circular
-                  indeterminate
-                  color="primary"
-                  size="72"
-                  width="6"
-                  class="mb-6"
-                />
-                <h3 style="font-weight: 600; margin-bottom: 0.5rem;">Analyzing image...</h3>
-                <p style="color: #6b7280;">Our AI is processing your medical image</p>
-              </div>
 
-              <!-- Results -->
-              <div v-else-if="simulatorStore.hasResults && simulatorStore.results">
-                <v-card rounded="lg" elevation="2" class="mb-4">
-                  <v-card-text class="pa-5">
-                    <!-- Confidence bar -->
-                    <div class="d-flex justify-space-between mb-2">
-                      <span style="font-weight: 600;">AI Confidence</span>
-                      <span style="color: #159a8e; font-weight: 700;">
-                        {{ simulatorStore.results?.confidence }}%
-                      </span>
-                    </div>
-                    <v-progress-linear
-                      :model-value="simulatorStore.results?.confidence"
-                      color="primary"
-                      rounded
-                      height="10"
-                      class="mb-5"
-                    />
-
-                    <!-- Diagnosis -->
-                    <v-alert
-                      type="warning"
-                      variant="tonal"
-                      rounded="lg"
-                      class="mb-4"
-                    >
-                      <strong>Diagnosis:</strong> {{ simulatorStore.results?.diagnosis }}
-                      <br>
-                      <small>Severity: {{ simulatorStore.results?.severity }}</small>
-                    </v-alert>
-
-                    <!-- Details -->
-                    <v-list density="compact" lines="one" class="mb-4">
-                      <v-list-item
-                        v-for="detail in simulatorStore.results?.details"
-                        :key="detail.label"
-                        :title="detail.label"
-                        :subtitle="detail.value"
-                        prepend-icon="mdi-information-outline"
-                      />
-                    </v-list>
-
-                    <!-- Recommendations -->
-                    <h4 class="mb-3" style="font-weight: 600;">Recommendations</h4>
-                    <v-list density="compact">
-                      <v-list-item
-                        v-for="rec in simulatorStore.results?.recommendations"
-                        :key="rec"
-                        :title="rec"
-                        prepend-icon="mdi-check-circle-outline"
-                        base-color="primary"
-                      />
-                    </v-list>
-                  </v-card-text>
-                </v-card>
-              </div>
-
-              <!-- Empty State -->
-              <div v-else class="results-placeholder text-center">
-                <span style="font-size: 4rem;">🧠</span>
-                <h3 class="mt-4 mb-2" style="font-weight: 600;">No analysis yet</h3>
-                <p style="color: #6b7280;">Upload an image and click "Analyze with AI" to get started.</p>
-              </div>
-            </v-col>
           </v-row>
         </div>
 
@@ -407,10 +330,14 @@ const analyze = async () => {
 }
 
 const sendChatWithFile = async () => {
-  const file = fileInputRef.value?.files?.[0] ?? null
+  // Try to get from input, fallback to the one saved in store by handleFileSelect
+  const file = fileInputRef.value?.files?.[0] || simulatorStore.uploadedImage || null
   await simulatorStore.sendChat(file)
-  // clear the file input after sending
+  
+  // clear the file inputs after sending
   if (fileInputRef.value) fileInputRef.value.value = ''
+  simulatorStore.uploadedImage = null
+  simulatorStore.uploadedImageUrl = null
 }
 </script>
 

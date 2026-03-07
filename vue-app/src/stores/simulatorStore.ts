@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import chatService from '@/services/chatService'
 
 interface AnalysisResult {
     confidence: number;
@@ -20,6 +21,7 @@ interface ChatMessage {
     id: number;
     sender: 'user' | 'ai';
     text: string;
+    imageUrl?: string;
 }
 
 interface SimulatorState {
@@ -100,18 +102,18 @@ export const useSimulatorStore = defineStore('simulator', {
             this.isAnalyzing = false
         },
         // chat actions
-        addChatMessage(sender: 'user' | 'ai', text: string) {
-            this.chatMessages.push({ id: Date.now(), sender, text })
+        addChatMessage(sender: 'user' | 'ai', text: string, imageUrl?: string) {
+            this.chatMessages.push({ id: Date.now(), sender, text, imageUrl })
         },
         async sendChat(file?: File | null) {
             if (!this.chatInput.trim() && !file) return
             if (this.guestLimitReached) return
 
             const text = this.chatInput.trim()
-            this.addChatMessage('user', text || 'Imagen enviada para análisis clínico')
-            this.chatInput = ''
+            const imgUrl = file ? URL.createObjectURL(file) : (this.uploadedImageUrl || undefined);
 
-            const chatService = (await import('../services/chatService')).default
+            this.addChatMessage('user', text || (file ? 'Imagen enviada para análisis clínico' : ''), imgUrl)
+            this.chatInput = ''
 
             // Create session on first message
             if (!this.chatSessionId) {
@@ -142,7 +144,7 @@ export const useSimulatorStore = defineStore('simulator', {
                         'Has alcanzado el límite de 3 mensajes gratuitos al día. Crea una cuenta para continuar sin límites.'
                     )
                 } else {
-                    this.addChatMessage('ai', 'Error al contactar con la IA. Comprueba la conexión.')
+                    this.addChatMessage('ai', err.message || 'Error al contactar con la IA. Comprueba la conexión.')
                 }
             }
         }

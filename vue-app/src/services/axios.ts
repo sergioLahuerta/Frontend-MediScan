@@ -3,7 +3,6 @@ import axios, { AxiosInstance } from 'axios';
 const apiClient: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5073/api',
   headers: {
-    'Content-Type': 'application/json',
     'Accept': 'application/json'
   }
 });
@@ -32,7 +31,10 @@ apiClient.interceptors.response.use(
       error.response?.data?.Message ||
       error.message ||
       'Network error. Please check if the backend is running.';
-    return Promise.reject(new Error(message));
+
+    // Preserve the original AxiosError object so callers can read error.response.status
+    error.message = message;
+    return Promise.reject(error);
   }
 );
 
