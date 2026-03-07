@@ -44,6 +44,7 @@ interface SimulatorState {
     guestLimitReached: boolean;
     sessions: SessionInfo[];
     isLoadingSessions: boolean;
+    isThinking: boolean;
 }
 
 export const useSimulatorStore = defineStore('simulator', {
@@ -60,6 +61,7 @@ export const useSimulatorStore = defineStore('simulator', {
         guestLimitReached: false,
         sessions: [],
         isLoadingSessions: false,
+        isThinking: false,
     }),
     getters: {
         hasResults: (state) => state.results !== null,
@@ -189,6 +191,7 @@ export const useSimulatorStore = defineStore('simulator', {
                 }
             }
 
+            this.isThinking = true
             try {
                 const result = await chatService.sendMessage(
                     this.chatSessionId,
@@ -210,7 +213,9 @@ export const useSimulatorStore = defineStore('simulator', {
                 } else {
                     this.addChatMessage('ai', err.message || 'Error al contactar con la IA. Comprueba la conexión.')
                 }
+            } finally {
+                this.isThinking = false
             }
         }
-    },
+    }
 })

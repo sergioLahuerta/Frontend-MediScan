@@ -15,7 +15,7 @@
             <span class="text-h5 font-weight-bold text-primary">MediScan</span>
           </div>
           <p class="text-body-2 text-medium-emphasis mb-6 pr-md-8">
-            Advanced medical technology supported by artificial intelligence for more accurate and faster diagnostics.
+            {{ $t('footer.description') }}
           </p>
           <div class="social-links d-flex gap-2">
             <v-btn v-for="icon in socialIcons" :key="icon" icon variant="tonal" size="small" color="primary">
@@ -25,7 +25,7 @@
         </v-col>
 
         <v-col v-for="column in footerLinks" :key="column.title" cols="6" md="2" class="mb-8 mb-md-0">
-          <h4 class="text-subtitle-1 font-weight-bold mb-6 opacity-80">{{ column.title }}</h4>
+          <h4 class="text-subtitle-1 font-weight-bold mb-6 opacity-80">{{ $t(column.title) }}</h4>
           <ul class="footer-list p-0">
             <li v-for="link in column.links" :key="link.text" class="mb-3">
               <a href="#" class="text-body-2 text-medium-emphasis text-decoration-none hover-primary">{{ link.text }}</a>
@@ -34,10 +34,10 @@
         </v-col>
 
         <v-col cols="12" md="2">
-          <h4 class="text-subtitle-1 font-weight-bold mb-6 opacity-80">Company</h4>
+          <h4 class="text-subtitle-1 font-weight-bold mb-6 opacity-80">{{ $t('footer.company') }}</h4>
           <ul class="footer-list p-0">
-            <li class="mb-3"><router-link to="/contact" class="text-body-2 text-medium-emphasis text-decoration-none hover-primary">Contact Us</router-link></li>
-            <li class="mb-3"><router-link to="/services" class="text-body-2 text-medium-emphasis text-decoration-none hover-primary">Our Services</router-link></li>
+            <li class="mb-3"><router-link to="/contact" class="text-body-2 text-medium-emphasis text-decoration-none hover-primary">{{ $t('nav.contact') }}</router-link></li>
+            <li class="mb-3"><router-link to="/services" class="text-body-2 text-medium-emphasis text-decoration-none hover-primary">{{ $t('nav.services') }}</router-link></li>
           </ul>
         </v-col>
       </v-row>
@@ -46,11 +46,11 @@
 
       <div class="d-flex flex-column flex-md-row align-center justify-space-between gap-4">
         <p class="text-caption text-medium-emphasis">
-          © {{ new Date().getFullYear() }} MediScan Technologies. All rights reserved.
+          © {{ new Date().getFullYear() }} MediScan Technologies. {{ $t('footer.rights') }}
         </p>
         <div class="d-flex gap-6">
-          <a href="#" class="text-caption text-medium-emphasis text-decoration-none">Privacy Policy</a>
-          <a href="#" class="text-caption text-medium-emphasis text-decoration-none">Terms of Service</a>
+          <a href="#" class="text-caption text-medium-emphasis text-decoration-none">{{ $t('footer.privacy') }}</a>
+          <a href="#" class="text-caption text-medium-emphasis text-decoration-none">{{ $t('footer.terms') }}</a>
         </div>
       </div>
     </v-container>
@@ -61,7 +61,7 @@
 const socialIcons = ['mdi-facebook', 'mdi-twitter', 'mdi-instagram', 'mdi-linkedin']
 const footerLinks = [
   {
-    title: 'Products',
+    title: 'footer.products',
     links: [
       { text: 'AI Simulator' },
       { text: '3D Anatomy' },
@@ -70,7 +70,7 @@ const footerLinks = [
     ],
   },
   {
-    title: 'Support',
+    title: 'footer.support',
     links: [
       { text: 'Help Center' },
       { text: 'Documentation' },

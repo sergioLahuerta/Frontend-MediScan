@@ -30,15 +30,15 @@
           class="nav-link"
           :class="{ 'nav-link--active': isLinkActive(link) }"
         >
-          {{ link.label }}
+          {{ $t(link.label) }}
         </router-link>
       </nav>
 
       <!-- Auth & CTA Section -->
       <div class="d-none d-md-flex align-center" style="gap: 1rem;">
         <template v-if="!authStore.isAuthenticated">
-          <v-btn variant="text" color="primary" @click="$router.push('/login')">Log In</v-btn>
-          <v-btn color="primary" variant="tonal" rounded="lg" @click="$router.push('/register')">Join</v-btn>
+          <v-btn variant="text" color="primary" @click="$router.push('/login')">{{ $t('nav.login') }}</v-btn>
+          <v-btn color="primary" variant="tonal" rounded="lg" @click="$router.push('/register')">{{ $t('nav.join') }}</v-btn>
         </template>
         
         <template v-else>
@@ -53,7 +53,7 @@
             <v-list class="pa-2">
               <v-list-item
                 prepend-icon="mdi-logout"
-                title="Log Out"
+                :title="$t('nav.logout')"
                 rounded="lg"
                 color="error"
                 @click="handleLogout"
@@ -65,24 +65,44 @@
         <v-divider vertical class="mx-2 my-4"></v-divider>
 
         <!-- Theme Switcher -->
-        <v-btn icon @click="toggleTheme" title="Toggle Theme">
-          <v-icon>{{ theme.global.name.value === 'dark' ? 'mdi-weather-sunny' : 'mdi-weather-night' }}</v-icon>
+        <v-btn 
+          icon 
+          variant="tonal" 
+          color="primary" 
+          size="small" 
+          class="mr-2 theme-toggle-btn"
+          @click="toggleTheme" 
+          :title="$t('nav.toggleTheme')"
+        >
+          <v-icon size="small">{{ theme.global.name.value === 'dark' ? 'mdi-weather-sunny' : 'mdi-weather-night' }}</v-icon>
         </v-btn>
 
         <!-- Language Switcher -->
-        <v-menu offset-y>
+        <v-menu offset-y transition="slide-y-transition">
           <template v-slot:activator="{ props }">
-            <v-btn variant="text" v-bind="props" class="text-none">
-              <v-icon start>mdi-translate</v-icon>
-              {{ locale === 'es' ? 'ES' : 'EN' }}
+            <v-btn
+              variant="tonal"
+              color="primary"
+              size="small"
+              class="px-2 font-weight-bold"
+              style="min-width: 44px; height: 32px;"
+              v-bind="props"
+            >
+              <v-icon start size="small">mdi-translate</v-icon>
+              {{ locale.toUpperCase() }}
             </v-btn>
           </template>
-          <v-list>
-            <v-list-item @click="setLocale('en')" :active="locale === 'en'">
-              <v-list-item-title>English</v-list-item-title>
-            </v-list-item>
-            <v-list-item @click="setLocale('es')" :active="locale === 'es'">
-              <v-list-item-title>Español</v-list-item-title>
+          <v-list density="compact" rounded="lg" class="pa-2">
+            <v-list-item
+              v-for="lang in [{ code: 'en', label: 'English' }, { code: 'es', label: 'Español' }]"
+              :key="lang.code"
+              :value="lang.code"
+              :active="locale === lang.code"
+              active-color="primary"
+              rounded="md"
+              @click="setLocale(lang.code)"
+            >
+              <v-list-item-title class="text-caption font-weight-bold">{{ lang.label }}</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -94,7 +114,7 @@
           @click="$router.push('/services')"
         >
           <v-icon start>mdi-robot</v-icon>
-          AI Simulator
+          {{ $t('nav.aiSimulator') }}
         </v-btn>
       </div>
     </v-container>
@@ -115,13 +135,13 @@ const theme = useTheme()
 const { locale } = useI18n()
 
 const navLinks = computed(() => [
-  { to: '/', name: 'home', label: 'Home' },
+  { to: '/', name: 'home', label: 'nav.home' },
   { 
     to: authStore.isAuthenticated ? '/services' : '/#services', 
     name: authStore.isAuthenticated ? 'services' : 'home', 
-    label: 'Services' 
+    label: 'nav.services' 
   },
-  { to: '/contact', name: 'contact', label: 'Contact' },
+  { to: '/contact', name: 'contact', label: 'nav.contact' },
 ])
 
 const handleLogout = () => {
@@ -131,6 +151,10 @@ const handleLogout = () => {
 
 const toggleTheme = () => {
   theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
+}
+
+const toggleLanguage = () => {
+  locale.value = locale.value === 'en' ? 'es' : 'en'
 }
 
 const setLocale = (lang: string) => {

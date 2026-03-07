@@ -15,20 +15,20 @@
                   <v-icon color="primary">mdi-calendar-clock</v-icon>
                 </v-avatar>
                 <div>
-                  <div class="text-caption text-medium-emphasis font-weight-bold">NEXT APPOINTMENT</div>
+                  <div class="text-caption text-medium-emphasis font-weight-bold">{{ $t('services.dashboard.nextAppointment') }}</div>
                   <div v-if="loadingDashboard" class="text-body-2 mt-1">
                     <v-skeleton-loader type="text" width="100" />
                   </div>
                   <div v-else-if="nextAppointment" class="text-body-2 font-weight-bold mt-1">
                     {{ formatDate(nextAppointment.scheduledAt) }}
                   </div>
-                  <div v-else class="text-body-2 text-medium-emphasis mt-1">No scheduled visits</div>
+                  <div v-else class="text-body-2 text-medium-emphasis mt-1">{{ $t('services.dashboard.noAppointments') }}</div>
                 </div>
               </v-card-text>
               <v-divider />
               <v-card-actions class="pa-2 px-4">
                 <v-btn variant="text" size="small" color="primary" block @click="$router.push('/profile')">
-                  View all
+                  {{ $t('services.dashboard.viewAll') }}
                   <v-icon end size="x-small">mdi-arrow-right</v-icon>
                 </v-btn>
               </v-card-actions>
@@ -43,20 +43,20 @@
                   <v-icon color="warning">mdi-file-chart-outline</v-icon>
                 </v-avatar>
                 <div>
-                  <div class="text-caption text-medium-emphasis font-weight-bold">LATEST REPORT</div>
+                  <div class="text-caption text-medium-emphasis font-weight-bold">{{ $t('services.dashboard.latestReport') }}</div>
                   <div v-if="loadingDashboard" class="text-body-2 mt-1">
                     <v-skeleton-loader type="text" width="100" />
                   </div>
                   <div v-else-if="latestReport" class="text-body-2 font-weight-bold mt-1">
                     {{ latestReport.description }}
                   </div>
-                  <div v-else class="text-body-2 text-medium-emphasis mt-1">No reports yet</div>
+                  <div v-else class="text-body-2 text-medium-emphasis mt-1">{{ $t('services.dashboard.noReports') }}</div>
                 </div>
               </v-card-text>
               <v-divider />
               <v-card-actions class="pa-2 px-4">
                 <v-btn variant="text" size="small" color="warning" block @click="$router.push('/reports')">
-                  Go to records
+                  {{ $t('services.dashboard.goRecords') }}
                   <v-icon end size="x-small">mdi-arrow-right</v-icon>
                 </v-btn>
               </v-card-actions>
@@ -67,10 +67,10 @@
         <!-- Page Header -->
         <div class="text-center mb-10">
           <h1 class="section-title mb-3">
-            <span class="gradient-text">AI</span> Simulator
+            <span class="gradient-text">AI</span> {{ $t('services.tabs.aiSimulator') }}
           </h1>
           <p class="section-subtitle">
-            Upload a medical image and let our AI analyze it in seconds.
+            {{ $t('services.subtitle') }}
           </p>
           <!-- Tabs -->
           <v-btn-group class="mt-4" rounded="xl" density="comfortable">
@@ -80,7 +80,7 @@
               @click="activeTab = 'upload'"
             >
               <v-icon start>mdi-upload</v-icon>
-              Simulador AI
+              {{ $t('services.tabs.aiSimulator') }}
             </v-btn>
             <v-btn
               :variant="activeTab === 'models' ? 'flat' : 'outlined'"
@@ -88,7 +88,7 @@
               @click="activeTab = 'models'"
             >
               <v-icon start>mdi-cube-outline</v-icon>
-              Modelos 3D
+              {{ $t('services.tabs.models3D') }}
             </v-btn>
             <v-btn
               :variant="activeTab === 'compare' ? 'flat' : 'outlined'"
@@ -96,7 +96,7 @@
               @click="activeTab = 'compare'"
             >
               <v-icon start>mdi-compare-horizontal</v-icon>
-              Comparar
+              {{ $t('services.tabs.compare') }}
             </v-btn>
           </v-btn-group>
         </div>
@@ -109,10 +109,10 @@
               <v-row no-gutters class="chat-main-row">
                 <!-- Sessions Sidebar (Only for logged in users) -->
                 <v-col v-if="authStore.user" cols="12" md="3" class="chat-sidebar border-e">
-                  <v-card flat class="h-100 d-flex flex-column rounded-0">
-                    <div class="pa-4 d-flex align-center justify-space-between bg-grey-lighten-4">
-                      <span class="text-subtitle-2 font-weight-bold text-primary">Tus Consultas</span>
-                      <v-btn icon="mdi-plus" size="x-small" variant="flat" color="primary" @click="simulatorStore.createNewSession" title="Nueva Consulta"></v-btn>
+                  <v-card flat class="h-100 d-flex flex-column rounded-0 bg-background">
+                    <div class="pa-4 d-flex align-center justify-space-between bg-surface-light">
+                      <span class="text-subtitle-2 font-weight-bold text-primary">{{ $t('services.sidebarTitle') }}</span>
+                      <v-btn icon="mdi-plus" size="x-small" variant="flat" color="primary" @click="simulatorStore.createNewSession" :title="$t('services.newChat')"></v-btn>
                     </div>
                     <v-divider />
                     <v-list class="flex-grow-1 overflow-y-auto pa-2" density="comfortable">
@@ -143,7 +143,7 @@
                             />
                           </template>
                           <template v-else>
-                            {{ session.title || 'Consulta' }}
+                            {{ session.title || $t('services.sidebar.defaultChatTitle') }}
                           </template>
                         </v-list-item-title>
                         <v-list-item-subtitle class="text-caption opacity-70">{{ formatDate(session.startedAt) }}</v-list-item-subtitle>
@@ -169,7 +169,7 @@
                       </v-list-item>
                       <div v-if="simulatorStore.sessions.length === 0" class="text-center pa-8">
                         <v-icon size="large" color="grey-lighten-1" class="mb-2">mdi-history</v-icon>
-                        <div class="text-caption text-medium-emphasis">Historial vacío</div>
+                        <div class="text-caption text-medium-emphasis">{{ $t('services.sidebar.historyEmpty') }}</div>
                       </div>
                     </v-list>
                   </v-card>
@@ -178,18 +178,34 @@
                 <!-- Chat Column -->
                 <v-col cols="12" :md="authStore.user ? 9 : 12" class="chat-content-col pa-0">
                   <!-- Chat Interface -->
-                  <div class="chat-wrapper d-flex flex-column h-100">
+                  <div 
+                    class="chat-wrapper d-flex flex-column h-100"
+                    :class="{ 'dragging-over': isDragOverChat }"
+                    @dragover.prevent="isDragOverChat = true"
+                    @dragleave.prevent="isDragOverChat = false"
+                    @drop.prevent="handleChatDrop"
+                  >
+                    <!-- Drag Overlay Overlay -->
+                    <v-fade-transition>
+                      <div v-if="isDragOverChat" class="drag-overlay d-flex align-center justify-center">
+                        <div class="drag-message pa-8 rounded-xl bg-white shadow-lg text-center border-dashed-2">
+                          <v-icon size="64" color="primary" class="mb-4 animate-bounce">mdi-cloud-upload-outline</v-icon>
+                          <div class="text-h5 font-weight-bold text-primary">{{ $t('services.dropImageHere') }}</div>
+                          <div class="text-caption text-medium-emphasis mt-2">{{ $t('services.dragOverlaySubtitle') }}</div>
+                        </div>
+                      </div>
+                    </v-fade-transition>
                     <header class="chat-header pa-4 bg-primary text-white d-flex align-center justify-space-between shadow-sm">
                       <div>
-                        <div class="text-h6 font-weight-bold leading-tight">Assistant AI Mediscan</div>
-                        <div class="text-caption opacity-90">Soporte al Diagnóstico Médico Inteligente</div>
+                        <div class="text-h6 font-weight-bold leading-tight">{{ $t('services.aiAssistantTitle') }}</div>
+                        <div class="text-caption opacity-90">{{ $t('services.aiAssistantSubtitle') }}</div>
                       </div>
                       <div class="d-flex align-center ga-2">
-                        <v-chip v-if="!authStore.user" size="small" color="white" variant="flat" class="text-primary font-weight-bold" to="/register">
-                          Guardar Historial
-                        </v-chip>
+                        <v-alert v-if="!authStore.isAuthenticated" type="info" variant="tonal" class="mb-6 rounded-xl" density="compact">
+                  {{ $t('services.guestLogin') }}
+                </v-alert>
                         <v-chip size="small" variant="outlined" color="white" class="session-badge">
-                          {{ simulatorStore.chatSessionId ? 'Sesión Activa' : 'Nueva Consulta' }}
+                          {{ simulatorStore.chatSessionId ? $t('services.activeSession') : $t('services.newConsultation') }}
                         </v-chip>
                       </div>
                     </header>
@@ -200,7 +216,7 @@
                           <v-avatar size="32" color="primary-lighten-5" class="mr-3 avatar-ai border">
                             <v-icon size="18" color="primary">mdi-robot-outline</v-icon>
                           </v-avatar>
-                          <div>¡Hola! Soy tu asistente médico AI. Puedo analizar imágenes o responder dudas sobre síntomas. ¿En qué puedo ayudarte hoy?</div>
+                          <div>{{ $t('services.initialAIMessage') }}</div>
                         </div>
                       </div>
                       <div v-for="msg in simulatorStore.chatMessages" :key="msg.id" :class="['d-flex mb-4', msg.sender === 'user' ? 'justify-end' : 'justify-start']">
@@ -210,7 +226,8 @@
                               <v-icon size="18" color="primary">mdi-robot-outline</v-icon>
                             </v-avatar>
                             <div class="message-text">
-                              {{ msg.text }}
+                              <div v-if="msg.sender === 'ai'" class="markdown-body" v-html="md.render(msg.text)"></div>
+                              <div v-else>{{ msg.text }}</div>
                               <v-img v-if="msg.imageUrl" :src="msg.imageUrl" rounded="lg" class="mt-3 chat-image" max-width="320">
                                 <template v-slot:placeholder>
                                   <v-row class="fill-height ma-0" align="center" justify="center">
@@ -222,6 +239,12 @@
                           </div>
                         </div>
                       </div>
+                      <div v-if="simulatorStore.isThinking" class="message-row ai-message">
+                              <div class="ai-bubble thinking-bubble px-4 py-3 rounded-xl shadow-sm">
+                                <v-progress-circular indeterminate size="16" width="2" color="primary" class="mr-2" />
+                                <span class="text-caption">{{ $t('services.aiThinking') }}</span>
+                              </div>
+                            </div>
                     </div>
 
                     <!-- Input Area (Fixed at the bottom) -->
@@ -229,12 +252,12 @@
                       <!-- Guest Warning -->
                       <v-fade-transition>
                         <v-alert v-if="simulatorStore.guestLimitReached" type="warning" variant="tonal" density="compact" rounded="lg" class="mb-3 text-caption">
-                          Has alcanzado el límite gratuito. 
-                          <router-link to="/register" class="font-weight-bold">Regístrate</router-link> para seguir.
+                          {{ $t('services.limits.reached') }} 
+                          <router-link to="/register" class="font-weight-bold">{{ $t('services.limits.register') }}</router-link> {{ $t('services.limits.toContinue') }}
                         </v-alert>
                       </v-fade-transition>
 
-                      <div class="input-card rounded-pill border shadow-sm px-2 py-1 bg-grey-lighten-5" :class="{ 'opacity-50 pointer-events-none': simulatorStore.guestLimitReached }">
+                      <div class="input-card rounded-pill border shadow-sm px-2 py-1 bg-surface" :class="{ 'opacity-50 pointer-events-none': simulatorStore.guestLimitReached }">
                         <v-row no-gutters align="center">
                           <v-col cols="auto" class="pl-2">
                             <v-btn 
@@ -246,7 +269,7 @@
                               @click="fileInputRef?.click()"
                             >
                               <v-icon color="primary" size="24">mdi-camera</v-icon>
-                              <v-tooltip activator="parent" location="top">Adjuntar Imagen</v-tooltip>
+                              <v-tooltip activator="parent" location="top">{{ $t('services.attachImage') }}</v-tooltip>
                             </v-btn>
                             <input ref="fileInputRef" type="file" class="d-none" accept="image/*" @change="handleFileSelect">
                           </v-col>
@@ -254,7 +277,7 @@
                           <v-col class="mx-2">
                             <v-textarea
                               v-model="simulatorStore.chatInput"
-                              placeholder="Escribe tu consulta médica..."
+                              :placeholder="$t('services.placeholder')"
                               rows="1"
                               auto-grow
                               hide-details
@@ -282,7 +305,7 @@
                       <v-expand-transition>
                         <div v-if="simulatorStore.uploadedImageUrl" class="image-indicator d-flex align-center mt-2 px-4 py-1 rounded-pill bg-primary-lighten-5 text-primary text-caption font-weight-bold">
                           <v-icon size="16" class="mr-2 animate-pulse">mdi-image-check</v-icon>
-                          <span>Imagen lista para analizar</span>
+                          <span>{{ $t('services.imageReadyForAnalysis') }}</span>
                           <v-spacer />
                           <v-btn icon="mdi-close" size="x-small" variant="text" color="primary" @click="simulatorStore.resetAnalysis()"></v-btn>
                         </div>
@@ -305,12 +328,11 @@
           <v-row justify="center">
             <v-col cols="12" md="8">
               <v-img src="https://cdn.pixabay.com/photo/2014/04/03/10/32/skeleton-310860_1280.png" height="300" contain class="mb-6" />
-              <h2 class="text-h4 font-weight-bold mb-4">Atlas Anatómico 3D</h2>
+              <h2 class="text-h4 font-weight-bold mb-4">{{ $t('services.anatomicalAtlas3D') }}</h2>
               <p class="section-subtitle mb-8">
-                Visualiza y rota modelos de alta precisión para entender mejor tu diagnóstico. 
-                Soporta archivos DICOM y reconstrucciones volumétricas.
+                {{ $t('services.anatomicalAtlasSubtitle') }}
               </p>
-              <v-btn color="primary" size="x-large" rounded="lg">Abrir Visualizador</v-btn>
+              <v-btn color="primary" size="x-large" rounded="lg">{{ $t('services.openViewer') }}</v-btn>
             </v-col>
           </v-row>
         </div>
@@ -321,21 +343,21 @@
             <v-col cols="12" md="6" class="text-center">
               <v-card variant="outlined" class="pa-8 border-dashed rounded-xl">
                 <v-icon size="48" color="primary" class="mb-4">mdi-image-multiple</v-icon>
-                <h3>Imagen Base</h3>
-                <p>Tu estudio actual</p>
+                <h3>{{ $t('services.compareTab.baseImage') }}</h3>
+                <p>{{ $t('services.compareTab.currentStudy') }}</p>
               </v-card>
             </v-col>
             <v-col cols="12" md="6" class="text-center">
               <v-card variant="outlined" class="pa-8 border-dashed rounded-xl">
                 <v-icon size="48" color="primary" class="mb-4">mdi-database-search</v-icon>
-                <h3>Casos Similares</h3>
-                <p>Base de datos MediScan</p>
+                <h3>{{ $t('services.compareTab.similarCases') }}</h3>
+                <p>{{ $t('services.compareTab.database') }}</p>
               </v-card>
             </v-col>
           </v-row>
           <div class="text-center mt-10">
-            <h2 class="mb-2">Comparativa de Biomarcadores</h2>
-            <p class="section-subtitle">Identifica patrones comunes con miles de diagnósticos certificados.</p>
+            <h2 class="mb-2">{{ $t('services.compareTab.biomarkerTitle') }}</h2>
+            <p class="section-subtitle">{{ $t('services.compareTab.biomarkerSubtitle') }}</p>
           </div>
         </div>
 
@@ -349,14 +371,22 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch, nextTick } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useSimulatorStore } from '@/stores/simulatorStore'
 import { useAppStore } from '@/stores/appStore'
 import { useAuthStore } from '@/stores/authStore'
 import AppHeader from '@/components/AppHeader.vue'
 import AppFooter from '@/components/AppFooter.vue'
 import BottomNav from '@/components/BottomNav.vue'
+import MarkdownIt from 'markdown-it'
 import appointmentService, { Appointment } from '@/services/appointmentService'
 import diagnosisService, { Diagnosis } from '@/services/diagnosisService'
+
+const md = new MarkdownIt({
+  html: false,
+  linkify: true,
+  typographer: true
+})
 
 const simulatorStore = useSimulatorStore()
 const appStore = useAppStore()
@@ -364,6 +394,7 @@ const authStore = useAuthStore()
 
 const activeTab = ref('upload')
 const isDragOver = ref(false)
+const isDragOverChat = ref(false)
 const fileInputRef = ref<HTMLInputElement | null>(null)
 
 // Dashboard data
@@ -437,9 +468,11 @@ const fetchDashboardData = async () => {
   }
 }
 
+const { locale } = useI18n()
+
 const formatDate = (dateStr: string) => {
   const d = new Date(dateStr)
-  return d.toLocaleString('es-ES', { 
+  return d.toLocaleString(locale.value === 'es' ? 'es-ES' : 'en-US', { 
     day: 'numeric', 
     month: 'short', 
     hour: '2-digit', 
@@ -479,21 +512,29 @@ const sendChatWithFile = async () => {
   simulatorStore.uploadedImage = null
   simulatorStore.uploadedImageUrl = null
 }
+
+const handleChatDrop = (event: DragEvent) => {
+  isDragOverChat.value = false
+  const file = event.dataTransfer?.files[0]
+  if (file && file.type.startsWith('image/')) {
+    loadFile(file)
+  }
+}
 </script>
 
 <style scoped>
 .chat-main-row {
   height: 700px;
-  background: white;
+  background: rgb(var(--v-theme-surface));
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-  border: 1px solid #eef2f6;
+  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
   margin-bottom: 2rem;
 }
 
 .chat-sidebar {
-  background: #fcfdfe;
+  background: rgb(var(--v-theme-background));
   height: 100%;
 }
 
@@ -502,7 +543,7 @@ const sendChatWithFile = async () => {
 }
 
 .session-item:hover {
-  background-color: #f1f5f9;
+  background-color: rgba(var(--v-theme-primary), 0.05);
 }
 
 .session-actions {
@@ -515,7 +556,7 @@ const sendChatWithFile = async () => {
 }
 
 .chat-wrapper {
-  background-color: #ffffff;
+  background-color: rgb(var(--v-theme-surface));
   height: 100%;
 }
 
@@ -571,15 +612,107 @@ const sendChatWithFile = async () => {
 }
 
 .ai-bubble {
-  background-color: #f8fafc;
-  color: #334155;
+  background-color: rgb(var(--v-theme-surface-light));
+  color: rgb(var(--v-theme-on-surface));
   border-bottom-left-radius: 4px;
-  border: 1px solid #edf2f7;
+  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
   display: flex;
 }
 
 .avatar-ai {
   flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.markdown-body {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.markdown-body :deep(p) {
+  margin-bottom: 0.75rem;
+}
+
+.markdown-body :deep(p:last-child) {
+  margin-bottom: 0;
+}
+
+.markdown-body :deep(ul), .markdown-body :deep(ol) {
+  padding-left: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.markdown-body :deep(li) {
+  margin-bottom: 0.25rem;
+}
+
+.markdown-body :deep(strong) {
+  font-weight: 700;
+  color: rgb(var(--v-theme-primary));
+}
+
+.markdown-body :deep(h1), .markdown-body :deep(h2), .markdown-body :deep(h3) {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.markdown-body :deep(h3) {
+  font-size: 1.15rem;
+  color: rgb(var(--v-theme-primary));
+  border-left: 4px solid rgb(var(--v-theme-primary));
+  padding-left: 10px;
+  margin-left: -14px;
+}
+
+.markdown-body :deep(ul) {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.markdown-body :deep(ul li) {
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.markdown-body :deep(ul li::before) {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: #159a8e;
+  font-weight: bold;
+}
+
+.markdown-body :deep(table) {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.85rem;
+  background: rgb(var(--v-theme-surface));
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.markdown-body :deep(th), .markdown-body :deep(td) {
+  padding: 8px 12px;
+  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  text-align: left;
+}
+
+.markdown-body :deep(th) {
+  background-color: rgb(var(--v-theme-surface-light));
+  font-weight: bold;
+  color: rgb(var(--v-theme-on-surface));
+}
+
+.markdown-body :deep(code) {
+  background-color: rgb(var(--v-theme-surface-light));
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: inherit;
+  font-weight: 600;
 }
 
 .message-fade-in {
@@ -604,16 +737,16 @@ const sendChatWithFile = async () => {
 }
 
 .chat-input-area {
-  background: white;
+  background: rgb(var(--v-theme-surface));
   flex-shrink: 0;
   padding-bottom: 1.25rem !important;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
 }
 
 .input-card {
   transition: all 0.3s ease;
-  border: 1px solid #e2e8f0 !important;
-  background-color: white !important; /* Ensure visibility */
+  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity)) !important;
+  background-color: rgb(var(--v-theme-surface)) !important; /* Ensure visibility */
 }
 
 .input-card:focus-within {
@@ -623,7 +756,7 @@ const sendChatWithFile = async () => {
 
 .chat-textarea :deep(textarea) {
   font-size: 1rem;
-  color: #334155;
+  color: rgb(var(--v-theme-on-surface));
   line-height: 1.4;
   padding: 8px 0;
 }
@@ -676,5 +809,41 @@ const sendChatWithFile = async () => {
     height: calc(100vh - 200px);
     min-height: 600px;
   }
+}
+
+.chat-wrapper {
+  position: relative;
+}
+
+.dragging-over {
+  border: 2px solid #159a8e !important;
+}
+
+.drag-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(21, 154, 142, 0.1);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  pointer-events: none; /* Let events pass to parent handles */
+}
+
+.drag-message {
+  border: 4px dashed #159a8e;
+  max-width: 400px;
+  transform: translateY(-20px);
+}
+
+.animate-bounce {
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+  40% {transform: translateY(-20px);}
+  60% {transform: translateY(-10px);}
 }
 </style>

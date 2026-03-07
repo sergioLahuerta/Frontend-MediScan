@@ -9,12 +9,12 @@
   >
     <v-btn value="home" to="/">
       <v-icon>mdi-home</v-icon>
-      <span>Inicio</span>
+      <span>{{ $t('nav.home') }}</span>
     </v-btn>
 
     <v-btn value="services" to="/services">
       <v-icon>mdi-format-list-bulleted</v-icon>
-      <span>Servicios</span>
+      <span>{{ $t('nav.services') }}</span>
     </v-btn>
 
     <v-btn value="simulator" to="/services" class="bottom-nav-main">
@@ -25,12 +25,12 @@
 
     <v-btn value="reports" to="/reports">
       <v-icon>mdi-file-document-outline</v-icon>
-      <span>Informes</span>
+      <span>{{ $t('nav.reports') }}</span>
     </v-btn>
 
     <v-btn value="profile" to="/profile">
       <v-icon>mdi-account-circle-outline</v-icon>
-      <span>Perfil</span>
+      <span>{{ $t('nav.profile') }}</span>
     </v-btn>
   </v-bottom-navigation>
 </template>

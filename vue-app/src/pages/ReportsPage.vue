@@ -6,14 +6,14 @@
         
         <div class="text-center mb-10">
           <v-icon size="52" color="primary" class="mb-4">mdi-file-document-multiple-outline</v-icon>
-          <h1 class="section-title mb-2">Informes Clínicos</h1>
-          <p class="section-subtitle">Historial de diagnósticos generados por la IA.</p>
+          <h1 class="section-title mb-2">{{ $t('reports.title') }}</h1>
+          <p class="section-subtitle">{{ $t('reports.subtitle') }}</p>
         </div>
 
         <!-- Loading -->
         <div v-if="loading" class="text-center py-16">
           <v-progress-circular indeterminate color="primary" size="56" />
-          <p class="mt-4 text-medium-emphasis">Cargando informes...</p>
+          <p class="mt-4 text-medium-emphasis">{{ $t('reports.loading') }}</p>
         </div>
 
         <!-- Error state -->
@@ -24,9 +24,9 @@
         <!-- Empty state -->
         <v-card v-else-if="diagnoses.length === 0" variant="outlined" class="pa-12 rounded-xl text-center">
           <v-icon size="56" color="grey-lighten-1" class="mb-4">mdi-file-search-outline</v-icon>
-          <p class="text-medium-emphasis">Aún no tienes informes generados.</p>
+          <p class="text-medium-emphasis">{{ $t('reports.noReports') }}</p>
           <v-btn color="primary" class="mt-4" rounded="lg" to="/services">
-            Empezar Análisis
+            {{ $t('reports.startAnalysis') }}
           </v-btn>
         </v-card>
 
@@ -37,7 +37,7 @@
             :key="d.id"
             cols="12" md="6" lg="4"
           >
-            <v-card rounded="xl" elevation="2" class="h-100">
+            <v-card rounded="xl" elevation="2" class="h-100 bg-surface">
               <v-card-text class="pa-5">
                 <div class="d-flex align-center justify-space-between mb-4">
                   <v-chip color="warning" variant="tonal" size="small">{{ d.severity }}</v-chip>

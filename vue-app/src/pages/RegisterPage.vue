@@ -197,28 +197,29 @@ const handleRegister = async () => {
 
 <style lang="scss" scoped>
 .register-page {
-  background-color: #f9fafb;
+  background-color: rgb(var(--v-theme-background));
 }
 
 .auth-hero {
-  background: linear-gradient(225deg, #159a8e 0%, #0f8b81 100%);
-  color: white;
+  background: linear-gradient(225deg, rgb(var(--v-theme-primary)) 0%, rgb(var(--v-theme-secondary)) 100%);
+  color: rgb(var(--v-theme-on-primary));
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.8) !important;
+  background: rgba(var(--v-theme-surface), 0.8) !important;
   backdrop-filter: blur(20px);
+  border: 1px solid rgba(var(--v-theme-on-surface), 0.1);
 }
 
 .accent-text {
-  color: #ffd166;
+  color: rgb(var(--v-theme-accent));
 }
 
 .strength-bar {
   height: 4px;
   flex: 1;
   border-radius: 4px;
-  background: #e5e7eb;
+  background: rgba(var(--v-theme-on-surface), 0.1);
   transition: background 0.3s ease;
 
   &.weak   { background: #ef4444; }

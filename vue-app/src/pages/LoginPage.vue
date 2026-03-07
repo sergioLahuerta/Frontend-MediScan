@@ -181,7 +181,7 @@ const handleLogin = async () => {
 
 <style lang="scss" scoped>
 .login-page {
-  background-color: #f9fafb;
+  background-color: rgb(var(--v-theme-background));
   position: relative;
   overflow: hidden;
 }
@@ -239,7 +239,8 @@ const handleLogin = async () => {
   .blob-1 {
     width: 400px;
     height: 400px;
-    background: #e8faf7;
+    background: rgb(var(--v-theme-primary));
+    opacity: 0.15;
     top: -100px;
     right: -100px;
   }
@@ -247,7 +248,8 @@ const handleLogin = async () => {
   .blob-2 {
     width: 300px;
     height: 300px;
-    background: #eff6ff;
+    background: rgb(var(--v-theme-secondary));
+    opacity: 0.1;
     bottom: -50px;
     left: -50px;
   }
@@ -256,9 +258,9 @@ const handleLogin = async () => {
 .logo-wrapper {
   display: inline-flex;
   padding: 12px;
-  background: white;
+  background: white; /* Logo usually needs white bg to pop if it's not transparent */
   border-radius: 16px;
-  box-shadow: 0 10px 15px -3px rgba(21, 154, 142, 0.1);
+  box-shadow: 0 10px 15px -3px rgba(var(--v-theme-primary), 0.2);
 }
 
 .login-btn {

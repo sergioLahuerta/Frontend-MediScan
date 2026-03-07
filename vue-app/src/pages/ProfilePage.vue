@@ -7,34 +7,34 @@
           <v-avatar size="100" color="primary" class="mb-4">
             <v-icon size="60" color="white">mdi-account</v-icon>
           </v-avatar>
-          <h1 class="section-title mb-1">Tu Perfil</h1>
-          <p class="section-subtitle">Gestiona tu información y preferencias de salud.</p>
+          <h1 class="section-title mb-1 text-on-surface">{{ $t('profile.title') }}</h1>
+          <p class="section-subtitle">{{ $t('profile.subtitle') }}</p>
         </div>
 
         <v-row justify="center">
           <v-col cols="12" md="6">
-            <v-card rounded="xl" elevation="2" class="mb-6">
-              <v-card-title class="pa-4 pb-0 font-weight-bold">Información de Cuenta</v-card-title>
+            <v-card rounded="xl" elevation="2" class="mb-6 bg-surface">
+              <v-card-title class="pa-4 pb-0 font-weight-bold text-on-surface">{{ $t('profile.accountInfo') }}</v-card-title>
               <v-list class="pa-4">
                 <v-list-item prepend-icon="mdi-email-outline" title="Email" :subtitle="authStore.user?.email" />
                 <v-divider class="my-2" />
-                <v-list-item prepend-icon="mdi-shield-lock-outline" title="Seguridad" subtitle="Cambiar contraseña" link />
+                <v-list-item prepend-icon="mdi-shield-lock-outline" :title="$t('profile.security')" :subtitle="$t('profile.changePass')" link />
                 <v-divider class="my-2" />
-                <v-list-item prepend-icon="mdi-bell-outline" title="Notificaciones" subtitle="Configurar avisos" link />
+                <v-list-item prepend-icon="mdi-bell-outline" :title="$t('profile.notifications')" subtitle="Configurar avisos" link />
               </v-list>
             </v-card>
 
             <!-- Appointments Section -->
-            <h2 class="text-h5 font-weight-bold mb-4 px-2">Mis Citas Médicas</h2>
-            <v-card rounded="xl" elevation="2" class="mb-6">
+            <h2 class="text-h5 font-weight-bold mb-4 px-2 text-on-surface">{{ $t('profile.myAppointments') }}</h2>
+            <v-card rounded="xl" elevation="2" class="mb-6 bg-surface">
               <v-list v-if="loadingAppointments" class="pa-4">
                 <v-list-item>
                   <v-progress-circular indeterminate color="primary" size="24" class="mr-3" />
-                  Cargando tus citas...
+                  {{ $t('profile.loadingApts') }}
                 </v-list-item>
               </v-list>
               <v-list v-else-if="appointments.length === 0" class="pa-4">
-                <v-list-item title="No tienes citas programadas" subtitle="Agenda una en la sección de contacto." />
+                <v-list-item :title="$t('profile.noApts')" :subtitle="$t('profile.noAptsSub')" />
               </v-list>
               <v-list v-else class="pa-4">
                 <template v-for="(apt, index) in appointments" :key="apt.id">
@@ -55,7 +55,7 @@
             </v-card>
             
             <v-btn block color="error" variant="tonal" class="mt-6" rounded="lg" @click="handleLogout">
-              Cerrar Sesión
+              {{ $t('profile.logoutBtn') }}
             </v-btn>
           </v-col>
         </v-row>

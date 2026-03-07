@@ -7,28 +7,22 @@
 
         <!-- Tabs Header -->
         <div class="text-center mb-12">
-          <h1 class="section-title mb-3">
-            Get in <span class="gradient-text">Touch</span>
+          <h1 class="section-title mb-3 text-on-surface">
+            {{ $t('contact.title').split(' ')[0] }} {{ $t('contact.title').split(' ')[1] }} <span class="gradient-text">{{ $t('contact.title').split(' ').slice(2).join(' ') }}</span>
           </h1>
-          <p class="section-subtitle mb-8">
-            Do you have any questions or suggestions? We are here to help you.
+          <p class="section-subtitle mb-8 text-medium-emphasis">
+            {{ $t('contact.subtitle') }}
           </p>
           
           <!-- Tab Pills -->
           <div class="tab-pills">
-            <button
-              class="tab-pill"
-              :class="{ active: activeTab === 'contact' }"
-              @click="activeTab = 'contact'"
+            <button 
+              v-for="tab in ['contact', 'appointment']" 
+              :key="tab"
+              :class="['tab-pill', { active: activeTab === tab }]"
+              @click="activeTab = tab"
             >
-              <span>✉ Contact</span>
-            </button>
-            <button
-              class="tab-pill"
-              :class="{ active: activeTab === 'appointment' }"
-              @click="activeTab = 'appointment'"
-            >
-              <span>📅 Schedule Appointment</span>
+              <span>{{ $t(`contact.tabs.${tab}`) }}</span>
             </button>
           </div>
         </div>
@@ -39,10 +33,9 @@
           <v-col cols="12" md="4">
             <div class="d-flex flex-column" style="gap: 1.5rem;">
 
-              <!-- Contact Info Card -->
-              <v-card rounded="lg" elevation="1" border>
-                <v-card-title class="pa-5 pb-3" style="font-size: 1rem; font-weight: 600;">
-                  Contact Information
+              <v-card rounded="lg" elevation="1" border class="bg-surface">
+                <v-card-title class="pa-5 pb-3 font-weight-bold text-primary" style="font-size: 1rem;">
+                  {{ $t('contact.info.title') }}
                 </v-card-title>
                 <v-card-text class="pa-5 pt-0">
                   <div
@@ -50,11 +43,11 @@
                     :key="info.label"
                     class="d-flex align-start mb-6"
                   >
-                    <v-avatar size="44" color="primary-lighten-5" class="mr-3 flex-shrink-0">
-                      <v-icon color="primary" size="22">{{ info.icon }}</v-icon>
+                    <v-avatar size="44" color="primary" variant="tonal" class="mr-3 flex-shrink-0">
+                      <v-icon size="22">{{ info.icon }}</v-icon>
                     </v-avatar>
                     <div>
-                      <p class="info-label">{{ info.label }}</p>
+                      <p class="info-label">{{ $t(info.label) }}</p>
                       <p class="info-value" v-html="info.value"></p>
                     </div>
                   </div>
@@ -62,15 +55,15 @@
               </v-card>
 
               <!-- Support Channels Card -->
-              <v-card rounded="lg" elevation="1" border>
-                <v-card-title class="pa-5 pb-3" style="font-size: 1rem; font-weight: 600;">
-                  Support Channels
+              <v-card rounded="lg" elevation="1" border class="bg-surface">
+                <v-card-title class="pa-5 pb-3 font-weight-bold text-primary" style="font-size: 1rem;">
+                  {{ $t('contact.channels') }}
                 </v-card-title>
                 <v-card-text class="pa-5 pt-0">
                   <v-list density="compact" class="pa-0">
-                    <v-list-item prepend-icon="mdi-chat-processing-outline" title="Live Chat" />
-                    <v-list-item prepend-icon="mdi-help-circle-outline" title="Help Center" />
-                    <v-list-item prepend-icon="mdi-frequently-asked-questions" title="FAQ" />
+                    <v-list-item prepend-icon="mdi-chat-processing-outline" :title="$t('contact.channel.liveChat')" />
+                    <v-list-item prepend-icon="mdi-help-circle-outline" :title="$t('contact.channel.helpCenter')" />
+                    <v-list-item prepend-icon="mdi-frequently-asked-questions" :title="$t('contact.channel.faq')" />
                   </v-list>
                 </v-card-text>
               </v-card>
@@ -90,9 +83,9 @@
           <v-col cols="12" md="8">
             <v-fade-transition mode="out-in">
               <!-- Contact Form -->
-              <v-card v-if="activeTab === 'contact'" key="contact" rounded="lg" elevation="1" border>
-                <v-card-title class="pa-6 pb-2" style="font-size: 1.2rem; font-weight: 600;">
-                  Send us a Message
+              <v-card v-if="activeTab === 'contact'" key="contact" rounded="lg" elevation="1" border class="bg-surface">
+                <v-card-title class="pa-6 pb-2 font-weight-bold text-primary" style="font-size: 1.2rem;">
+                  {{ $t('contact.form.title') }}
                 </v-card-title>
                 <v-card-text class="pa-6">
                   <v-form ref="contactForm" v-model="formValid" @submit.prevent="submitForm">
@@ -100,8 +93,8 @@
                       <v-col cols="12" sm="6">
                         <v-text-field
                           v-model="form.firstName"
-                          label="Full Name"
-                          placeholder="Your full name"
+                          :label="$t('contact.form.name')"
+                          :placeholder="$t('contact.form.placeholderName')"
                           :rules="[rules.required]"
                           prepend-inner-icon="mdi-account"
                         />
@@ -109,8 +102,8 @@
                       <v-col cols="12" sm="6">
                         <v-text-field
                           v-model="form.email"
-                          label="Email Address"
-                          placeholder="your@email.com"
+                          :label="$t('contact.form.email')"
+                          :placeholder="$t('contact.form.placeholderEmail')"
                           type="email"
                           :rules="[rules.required, rules.email]"
                           prepend-inner-icon="mdi-email"
@@ -120,8 +113,8 @@
 
                     <v-select
                       v-model="form.subject"
-                      label="Reason"
-                      :items="subjectOptions"
+                      :label="$t('contact.form.reason')"
+                      :items="translatedSubjectOptions"
                       :rules="[rules.required]"
                       prepend-inner-icon="mdi-tag"
                       class="mb-2"
@@ -129,8 +122,8 @@
 
                     <v-textarea
                       v-model="form.message"
-                      label="Your Message"
-                      placeholder="How can we help you?"
+                      :label="$t('contact.form.message')"
+                      :placeholder="$t('contact.form.placeholderMsg')"
                       :rules="[rules.required, rules.minLength]"
                       prepend-inner-icon="mdi-message-text"
                       rows="5"
@@ -138,7 +131,7 @@
                     />
 
                     <v-alert type="info" variant="tonal" density="compact" rounded="lg" class="mb-6">
-                      Estimated response time: 24-48 business hours.
+                      {{ $t('contact.form.responseTime') }}
                     </v-alert>
 
                     <v-btn
@@ -151,31 +144,40 @@
                       :disabled="!formValid"
                     >
                       <v-icon start>mdi-send</v-icon>
-                      Submit
+                      {{ $t('contact.form.submit') }}
                     </v-btn>
                   </v-form>
                 </v-card-text>
               </v-card>
 
               <!-- Appointment Form -->
-              <v-card v-else-if="activeTab === 'appointment'" key="appointment" rounded="lg" elevation="1" border>
-                <v-card-title class="pa-6 pb-2" style="font-size: 1.2rem; font-weight: 600;">
-                  Schedule an Appointment
+              <v-card v-else-if="activeTab === 'appointment'" key="appointment" rounded="lg" elevation="1" border class="bg-surface">
+                <v-card-title class="pa-6 pb-2 font-weight-bold text-primary" style="font-size: 1.2rem;">
+                  {{ $t('contact.booking.title') }}
                 </v-card-title>
                 <v-card-text class="pa-6">
-                   <p class="mb-6 text-medium-emphasis">Select a professional, date and time for your medical consultation.</p>
+                  <v-alert v-if="!authStore.isAuthenticated" type="info" variant="tonal" rounded="lg" class="mb-6">
+                    {{ $t('contact.booking.loginRequired') }}
+                    <template v-slot:append>
+                      <v-btn color="primary" variant="flat" size="small" to="/login" class="ml-4">{{ $t('nav.login') }}</v-btn>
+                    </template>
+                  </v-alert>
+
+                   <p class="mb-6 text-medium-emphasis">
+                     {{ $t('contact.booking.subtitle') }}
+                   </p>
                    
                    <v-form ref="appointmentForm" v-model="appointmentValid" @submit.prevent="confirmAppointment">
                      <v-select
                        v-model="booking.professionalId"
-                       label="Select Professional"
+                       :label="$t('contact.booking.selectProfessional')"
                        :items="professionals"
                        item-title="name"
                        item-value="id"
                        prepend-inner-icon="mdi-doctor"
                        :rules="[rules.required]"
                        :loading="loadingProfessionals"
-                       placeholder="Choose a doctor"
+                       :placeholder="$t('contact.booking.placeholderProfessional')"
                        variant="outlined"
                        density="comfortable"
                        class="mb-4"
@@ -187,7 +189,7 @@
                            <template v-slot:activator="{ props }">
                              <v-text-field
                                v-bind="props"
-                               label="Date"
+                               :label="$t('contact.booking.date')"
                                v-model="booking.date"
                                prepend-inner-icon="mdi-calendar"
                                readonly
@@ -207,7 +209,7 @@
                        <v-col cols="12" sm="5">
                          <v-select
                            v-model="booking.time"
-                           label="Time"
+                           :label="$t('contact.booking.time')"
                            :items="timeSlots"
                            prepend-inner-icon="mdi-clock-outline"
                            variant="outlined"
@@ -219,8 +221,8 @@
 
                      <v-textarea
                        v-model="booking.notes"
-                       label="Notes (Optional)"
-                       placeholder="Symptoms or reason for visit"
+                       :label="$t('contact.booking.notesLabel')"
+                       :placeholder="$t('contact.booking.notesPlaceholder')"
                        variant="outlined"
                        rows="2"
                        prepend-inner-icon="mdi-note-text-outline"
@@ -236,7 +238,7 @@
                        :loading="isBooking"
                        :disabled="!appointmentValid"
                      >
-                       Confirm Appointment
+                       {{ $t('contact.booking.confirmBtn') }}
                      </v-btn>
                    </v-form>
                 </v-card-text>
@@ -246,11 +248,11 @@
         </v-row>
 
         <!-- Location -->
-        <v-card rounded="lg" elevation="1" border class="mt-8">
+        <v-card rounded="lg" elevation="1" border class="mt-8 bg-surface">
           <v-card-text class="pa-8 text-center">
             <v-icon size="56" color="primary" class="mb-3">mdi-map-marker</v-icon>
-            <h3 class="mb-2" style="font-size: 1.2rem; font-weight: 600;">Our Location</h3>
-            <p style="color: #6b7280;">Calle Tecnología 123, Zaragoza — Spain, 50001</p>
+            <h3 class="mb-2 font-weight-bold text-primary" style="font-size: 1.2rem;">{{ $t('contact.locationTitle') }}</h3>
+            <p class="text-medium-emphasis">Calle Tecnología 123, Zaragoza — Spain, 50001</p>
             <v-btn
               variant="outlined"
               color="primary"
@@ -260,7 +262,7 @@
               href="https://maps.google.com"
               target="_blank"
             >
-              Open in Google Maps
+              {{ $t('contact.mapsBtn') }}
             </v-btn>
           </v-card-text>
         </v-card>
@@ -274,7 +276,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, watch } from 'vue'
+import { ref, reactive, onMounted, watch, computed } from 'vue'
 import { useAppStore } from '@/stores/appStore'
 import { useAuthStore } from '@/stores/authStore'
 import AppHeader from '@/components/AppHeader.vue'
@@ -282,6 +284,9 @@ import AppFooter from '@/components/AppFooter.vue'
 import BottomNav from '@/components/BottomNav.vue'
 import appointmentService from '@/services/appointmentService'
 import professionalService, { Professional } from '@/services/professionalService'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const activeTab = ref('contact')
 const appStore = useAppStore()
@@ -320,9 +325,9 @@ const timeSlots = [
 ]
 
 const rules = {
-  required: (v: any) => !!v || 'This field is required',
-  email: (v: string) => /.+@.+\..+/.test(v) || 'Invalid email address',
-  minLength: (v: string) => v.length >= 10 || 'Message too short (min 10 characters)',
+  required: (v: any) => !!v || t('validation.required'),
+  email: (v: string) => /.+@.+\..+/.test(v) || t('validation.email'),
+  minLength: (v: string) => v.length >= 10 || t('validation.minLength', { min: 10 }),
 }
 
 const subjectOptions = [
@@ -332,11 +337,15 @@ const subjectOptions = [
   'Feedback',
 ]
 
+const translatedSubjectOptions = computed(() => {
+  return subjectOptions.map(option => t(`contact.form.subjectOptions.${option.replace(/\s/g, '')}`))
+})
+
 const contactInfo = [
-  { icon: 'mdi-map-marker', label: 'Direction', value: 'Calle Medicina 123, Piso 4<br>28001 Madrid, España' },
-  { icon: 'mdi-phone', label: 'Phones', value: 'General: +34 91 123 45 67<br>Emergency: +34 600 123 456' },
-  { icon: 'mdi-email', label: 'Emails', value: 'info@mediscan.com<br>soporte@mediscan.com' },
-  { icon: 'mdi-clock-outline', label: 'Schedule', value: 'Mon - Fri: 9:00 - 20:00<br>Sat - Sun: 9:00 - 14:00' },
+  { icon: 'mdi-map-marker', label: 'contact.info.direction', value: 'Calle Medicina 123, Piso 4<br>28001 Madrid, España' },
+  { icon: 'mdi-phone', label: 'contact.info.phones', value: 'General: +34 91 123 45 67<br>Emergency: +34 600 123 456' },
+  { icon: 'mdi-email', label: 'contact.info.emails', value: 'info@mediscan.com<br>soporte@mediscan.com' },
+  { icon: 'mdi-clock-outline', label: 'contact.info.schedule', value: 'Mon - Fri: 9:00 - 20:00<br>Sat - Sun: 9:00 - 14:00' },
 ]
 
 onMounted(async () => {
@@ -426,27 +435,25 @@ const confirmAppointment = async () => {
 <style lang="scss" scoped>
 .info-label {
   font-size: 0.8rem;
-  color: #9ca3af;
+  color: rgb(var(--v-theme-on-surface));
+  opacity: 0.6;
   margin-bottom: 2px;
 }
 .info-value {
   font-size: 0.9rem;
-  color: #1f2937;
+  color: rgb(var(--v-theme-on-surface));
   font-weight: 500;
 }
 
-/* Tab Pills */
 .tab-pills {
   display: inline-flex;
-  background: rgba(0, 0, 0, 0.05);
+  background: rgb(var(--v-theme-surface-light));
   border-radius: 50px;
   padding: 4px;
   gap: 2px;
 }
 
-:global(.v-theme--dark) .tab-pills {
-  background: rgba(255, 255, 255, 0.08);
-}
+
 
 .tab-pill {
   padding: 10px 24px;
@@ -457,7 +464,8 @@ const confirmAppointment = async () => {
   font-size: 0.9rem;
   font-weight: 500;
   white-space: nowrap;
-  color: #6b7280;
+  color: rgb(var(--v-theme-on-surface));
+  opacity: 0.7;
   transition: all 0.25s ease;
 }
 
