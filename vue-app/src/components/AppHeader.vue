@@ -45,12 +45,26 @@
           <v-menu min-width="200px" rounded="lg">
             <template v-slot:activator="{ props }">
               <v-btn icon v-bind="props">
-                <v-avatar color="primary" size="36">
-                  <v-icon color="white">mdi-account</v-icon>
+                <v-avatar color="white" size="36" class="border">
+                  <v-img v-if="authStore.user?.profileImageUrl" :src="getFullImageUrl(authStore.user.profileImageUrl)" alt="Avatar">
+                    <template v-slot:placeholder>
+                      <v-row class="fill-height ma-0" align="center" justify="center">
+                        <v-progress-circular indeterminate color="primary-lighten-4" size="20"></v-progress-circular>
+                      </v-row>
+                    </template>
+                  </v-img>
+                  <v-icon v-else color="primary">mdi-account</v-icon>
                 </v-avatar>
               </v-btn>
             </template>
             <v-list class="pa-2">
+              <v-list-item
+                prepend-icon="mdi-account-circle-outline"
+                :title="$t('nav.profile')"
+                rounded="lg"
+                @click="$router.push('/profile')"
+              ></v-list-item>
+              <v-divider class="my-1" />
               <v-list-item
                 prepend-icon="mdi-logout"
                 :title="$t('nav.logout')"
@@ -98,7 +112,7 @@
               :key="lang.code"
               :value="lang.code"
               :active="locale === lang.code"
-              active-color="primary"
+              color="primary"
               rounded="md"
               @click="setLocale(lang.code)"
             >
@@ -133,6 +147,13 @@ const router = useRouter()
 const route = useRoute()
 const theme = useTheme()
 const { locale } = useI18n()
+
+const getFullImageUrl = (path: string) => {
+  if (!path) return ''
+  if (path.startsWith('http')) return path
+  const baseUrl = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5073/api').replace('/api', '')
+  return `${baseUrl}${path}`
+}
 
 const navLinks = computed(() => [
   { to: '/', name: 'home', label: 'nav.home' },

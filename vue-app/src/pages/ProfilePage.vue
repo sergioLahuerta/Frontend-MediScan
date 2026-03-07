@@ -4,9 +4,36 @@
     <v-main style="padding-bottom: 80px;">
       <v-container class="py-8">
         <div class="text-center mb-10">
-          <v-avatar size="100" color="primary" class="mb-4">
-            <v-icon size="60" color="white">mdi-account</v-icon>
-          </v-avatar>
+          <div class="avatar-container mb-4">
+            <v-avatar size="120" color="primary-lighten-5" class="profile-avatar shadow-lg border">
+              <v-img v-if="authStore.user?.profileImageUrl" :src="getFullImageUrl(authStore.user.profileImageUrl)" alt="Profile">
+                <template v-slot:placeholder>
+                  <v-row class="fill-height ma-0" align="center" justify="center">
+                    <v-progress-circular indeterminate color="primary-lighten-4"></v-progress-circular>
+                  </v-row>
+                </template>
+              </v-img>
+              <v-icon v-else size="64" color="primary">mdi-account</v-icon>
+              
+              <!-- Hover Overlay -->
+              <div class="avatar-overlay d-flex align-center justify-center" @click="triggerFileInput">
+                <v-icon color="white" size="32">mdi-camera-plus</v-icon>
+                <div class="upload-text text-white font-weight-bold">Cambiar foto</div>
+              </div>
+              
+              <!-- Loading Overlay -->
+              <div v-if="isUploading" class="upload-loading d-flex align-center justify-center">
+                <v-progress-circular indeterminate color="white" size="32"></v-progress-circular>
+              </div>
+            </v-avatar>
+            <input
+              ref="fileInput"
+              type="file"
+              class="d-none"
+              accept="image/*"
+              @change="onFileSelected"
+            >
+          </div>
           <h1 class="section-title mb-1 text-on-surface">{{ $t('profile.title') }}</h1>
           <p class="section-subtitle">{{ $t('profile.subtitle') }}</p>
         </div>
@@ -74,12 +101,56 @@ import AppHeader from '@/components/AppHeader.vue'
 import AppFooter from '@/components/AppFooter.vue'
 import BottomNav from '@/components/BottomNav.vue'
 import appointmentService, { Appointment } from '@/services/appointmentService'
+import userService from '@/services/userService'
+import { useAppStore } from '@/stores/appStore'
 
 const authStore = useAuthStore()
+const appStore = useAppStore()
 const router = useRouter()
 
 const appointments = ref<Appointment[]>([])
 const loadingAppointments = ref(false)
+const isUploading = ref(false)
+const fileInput = ref<HTMLInputElement | null>(null)
+
+const getFullImageUrl = (path: string) => {
+  if (!path) return ''
+  if (path.startsWith('http')) return path
+  const baseUrl = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5073/api').replace('/api', '')
+  return `${baseUrl}${path}`
+}
+
+const triggerFileInput = () => {
+  fileInput.value?.click()
+}
+
+const onFileSelected = async (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+  if (!file) return
+
+  if (!file.type.startsWith('image/')) {
+    appStore.showSnackbar('Por favor selecciona una imagen válida', 'error')
+    return
+  }
+
+  isUploading.value = true
+  try {
+    const result = await userService.uploadProfileImage(file)
+    if (authStore.user) {
+      authStore.user.profileImageUrl = result.profileImageUrl
+      // Update localStorage
+      localStorage.setItem('user', JSON.stringify(authStore.user))
+    }
+    appStore.showSnackbar('Foto de perfil actualizada correctamente', 'success')
+  } catch (err) {
+    console.error('Error uploading profile image', err)
+    appStore.showSnackbar('Error al subir la imagen', 'error')
+  } finally {
+    isUploading.value = false
+    if (fileInput.value) fileInput.value.value = ''
+  }
+}
 
 onMounted(async () => {
   fetchAppointments()
@@ -124,3 +195,54 @@ const handleLogout = () => {
   router.push('/login')
 }
 </script>
+
+<style scoped>
+.avatar-container {
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.profile-avatar {
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(var(--v-theme-primary), 0.6);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  flex-direction: column;
+  transition: opacity 0.3s ease;
+}
+
+.profile-avatar:hover .avatar-overlay {
+  opacity: 1;
+}
+
+.upload-text {
+  font-size: 0.75rem;
+  margin-top: 4px;
+}
+
+.upload-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 2;
+}
+
+.shadow-lg {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+}
+</style>

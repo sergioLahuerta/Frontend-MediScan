@@ -5,6 +5,7 @@ interface UserInfo {
   id: string;
   email: string;
   roleId: string;
+  profileImageUrl?: string;
 }
 
 interface AuthState {
@@ -60,6 +61,7 @@ export const useAuthStore = defineStore('auth', {
         this.user = tokenToUser(token);
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(this.user));
+        await this.fetchUserProfile();
         return true;
       } catch (err: any) {
         this.error = err.message || 'Login failed';
@@ -81,6 +83,7 @@ export const useAuthStore = defineStore('auth', {
           this.user = tokenToUser(token);
           localStorage.setItem('token', token);
           localStorage.setItem('user', JSON.stringify(this.user));
+          await this.fetchUserProfile();
         }
         return true;
       } catch (err: any) {
@@ -96,6 +99,26 @@ export const useAuthStore = defineStore('auth', {
       this.token = null;
       localStorage.removeItem('token');
       localStorage.removeItem('user');
+    },
+
+    async fetchUserProfile() {
+      if (!this.user?.id) return;
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5073/api'}/Users/${this.user.id}`, {
+          headers: {
+            'Authorization': `Bearer ${this.token}`
+          }
+        });
+        if (response.ok) {
+          const userData = await response.json();
+          if (this.user) {
+            this.user.profileImageUrl = userData.profileImageUrl;
+            localStorage.setItem('user', JSON.stringify(this.user));
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch user profile', err);
+      }
     }
   }
 });

@@ -44,6 +44,18 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/pages/RegisterPage.vue'),
         meta: { title: 'MediScan - Join Us' },
     },
+    {
+        path: '/terms',
+        name: 'terms',
+        component: () => import('@/pages/TermsPage.vue'),
+        meta: { title: 'MediScan - Terms and Conditions' },
+    },
+    {
+        path: '/privacy',
+        name: 'privacy',
+        component: () => import('@/pages/PrivacyPage.vue'),
+        meta: { title: 'MediScan - Privacy Policy' },
+    },
 ]
 
 const router = createRouter({
@@ -65,10 +77,10 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     document.title = (to.meta.title as string) || 'MediScan'
-    
+
     // Simple protection for "services" (simulator)
     const isAuthenticated = !!localStorage.getItem('token')
-    
+
     if (to.name === 'services' && !isAuthenticated) {
         next({ name: 'login' })
     } else {

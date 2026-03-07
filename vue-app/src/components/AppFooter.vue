@@ -7,17 +7,16 @@
             <v-img
               src="/logo.png"
               alt="MediScan Branding"
-              width="36"
-              height="36"
-              class="mr-3"
-              contain
+              width="40"
+              height="40"
+              class="flex-grow-0 mr-3"
             />
-            <span class="text-h5 font-weight-bold text-primary">MediScan</span>
+            <span class="text-h5 font-weight-bold text-primary" style="letter-spacing: -1px; line-height: 1;">MediScan</span>
           </div>
           <p class="text-body-2 text-medium-emphasis mb-6 pr-md-8">
             {{ $t('footer.description') }}
           </p>
-          <div class="social-links d-flex gap-2">
+          <div class="social-links d-flex ga-2">
             <v-btn v-for="icon in socialIcons" :key="icon" icon variant="tonal" size="small" color="primary">
               <v-icon>{{ icon }}</v-icon>
             </v-btn>
@@ -28,7 +27,7 @@
           <h4 class="text-subtitle-1 font-weight-bold mb-6 opacity-80">{{ $t(column.title) }}</h4>
           <ul class="footer-list p-0">
             <li v-for="link in column.links" :key="link.text" class="mb-3">
-              <a href="#" class="text-body-2 text-medium-emphasis text-decoration-none hover-primary">{{ link.text }}</a>
+              <router-link :to="link.to || '#'" class="text-body-2 text-medium-emphasis text-decoration-none hover-primary">{{ link.text }}</router-link>
             </li>
           </ul>
         </v-col>
@@ -44,13 +43,13 @@
 
       <v-divider class="my-10"></v-divider>
 
-      <div class="d-flex flex-column flex-md-row align-center justify-space-between gap-4">
+      <div class="d-flex flex-column flex-md-row align-center justify-space-between ga-4">
         <p class="text-caption text-medium-emphasis">
           © {{ new Date().getFullYear() }} MediScan Technologies. {{ $t('footer.rights') }}
         </p>
-        <div class="d-flex gap-6">
-          <a href="#" class="text-caption text-medium-emphasis text-decoration-none">{{ $t('footer.privacy') }}</a>
-          <a href="#" class="text-caption text-medium-emphasis text-decoration-none">{{ $t('footer.terms') }}</a>
+        <div class="d-flex ga-6">
+          <router-link to="/privacy" class="text-caption text-medium-emphasis text-decoration-none hover-primary">{{ $t('footer.privacy') }}</router-link>
+          <router-link to="/terms" class="text-caption text-medium-emphasis text-decoration-none hover-primary">{{ $t('footer.terms') }}</router-link>
         </div>
       </div>
     </v-container>
@@ -63,19 +62,19 @@ const footerLinks = [
   {
     title: 'footer.products',
     links: [
-      { text: 'AI Simulator' },
-      { text: '3D Anatomy' },
-      { text: 'Courses' },
-      { text: 'Certification' },
+      { text: 'AI Simulator', to: '/services' },
+      { text: '3D Anatomy', to: '/services?tab=models' },
+      { text: 'Courses', to: '#' },
+      { text: 'Certification', to: '#' },
     ],
   },
   {
     title: 'footer.support',
     links: [
-      { text: 'Help Center' },
-      { text: 'Documentation' },
-      { text: 'API Status' },
-      { text: 'Security' },
+      { text: 'Help Center', to: '/contact' },
+      { text: 'Documentation', to: '#' },
+      { text: 'API Status', to: '#' },
+      { text: 'Security', to: '#' },
     ],
   },
 ]

@@ -65,15 +65,15 @@
         </v-row>
 
         <!-- Page Header -->
-        <div class="text-center mb-10">
-          <h1 class="section-title mb-3">
+        <div class="text-center mb-4">
+          <h1 class="section-title mb-2">
             <span class="gradient-text">AI</span> {{ $t('services.tabs.aiSimulator') }}
           </h1>
-          <p class="section-subtitle">
+          <p class="section-subtitle mb-2">
             {{ $t('services.subtitle') }}
           </p>
           <!-- Tabs -->
-          <v-btn-group class="mt-4" rounded="xl" density="comfortable">
+          <v-btn-group class="mt-2" rounded="xl" density="comfortable">
             <v-btn
               :variant="activeTab === 'upload' ? 'flat' : 'outlined'"
               color="primary"
@@ -120,7 +120,7 @@
                         v-for="session in simulatorStore.sessions" 
                         :key="session.id"
                         :active="simulatorStore.chatSessionId === session.id"
-                        active-color="primary"
+                        color="primary"
                         rounded="lg"
                         class="mb-2 session-item"
                         @click="simulatorStore.loadSession(session.id)"
@@ -324,24 +324,31 @@
         </div>
 
         <!-- TAB: 3D Models -->
-        <div v-else-if="activeTab === 'models'" class="py-10 text-center">
+        <div v-else-if="activeTab === 'models'" class="pt-0 pb-4 text-center">
           <v-row justify="center">
-            <v-col cols="12" md="8">
-              <v-img src="https://cdn.pixabay.com/photo/2014/04/03/10/32/skeleton-310860_1280.png" height="300" contain class="mb-6" />
-              <h2 class="text-h4 font-weight-bold mb-4">{{ $t('services.anatomicalAtlas3D') }}</h2>
-              <p class="section-subtitle mb-8">
+            <v-col cols="12" md="8" class="pt-0">
+              <v-img src="https://cdn.pixabay.com/photo/2014/04/03/10/32/skeleton-310860_1280.png" height="140" contain class="mb-2 animate-pulse" />
+              <h2 class="text-h4 font-weight-bold mb-2">{{ $t('services.anatomicalAtlas3D') }}</h2>
+              <p class="section-subtitle mb-4">
                 {{ $t('services.anatomicalAtlasSubtitle') }}
               </p>
-              <v-btn color="primary" size="x-large" rounded="lg">{{ $t('services.openViewer') }}</v-btn>
+              
+              <v-card class="coming-soon-card pa-8 rounded-xl bg-surface-light border-dashed-2 text-center ma-auto" max-width="540" variant="flat">
+                <v-icon size="64" color="primary" class="mb-4">mdi-clock-fast</v-icon>
+                <div class="text-h5 font-weight-bold gradient-text mb-2">{{ $t('services.comingSoon') }}</div>
+                <p class="text-body-1 text-medium-emphasis">
+                  {{ $t('services.underDevelopment') }}
+                </p>
+              </v-card>
             </v-col>
           </v-row>
         </div>
 
         <!-- TAB: Compare -->
-        <div v-else-if="activeTab === 'compare'" class="py-10">
+        <div v-else-if="activeTab === 'compare'" class="py-4">
           <v-row>
             <v-col cols="12" md="6" class="text-center">
-              <v-card variant="outlined" class="pa-8 border-dashed rounded-xl">
+              <v-card variant="outlined" class="pa-6 border-dashed rounded-xl">
                 <v-icon size="48" color="primary" class="mb-4">mdi-image-multiple</v-icon>
                 <h3>{{ $t('services.compareTab.baseImage') }}</h3>
                 <p>{{ $t('services.compareTab.currentStudy') }}</p>
@@ -355,9 +362,17 @@
               </v-card>
             </v-col>
           </v-row>
-          <div class="text-center mt-10">
+          <div class="text-center mt-6">
             <h2 class="mb-2">{{ $t('services.compareTab.biomarkerTitle') }}</h2>
-            <p class="section-subtitle">{{ $t('services.compareTab.biomarkerSubtitle') }}</p>
+            <p class="section-subtitle mb-6">{{ $t('services.compareTab.biomarkerSubtitle') }}</p>
+
+            <v-card class="coming-soon-card pa-8 rounded-xl bg-surface-light border-dashed-2 text-center ma-auto" max-width="540" variant="flat">
+                <v-icon size="64" color="primary" class="mb-4">mdi-compare-horizontal</v-icon>
+                <div class="text-h5 font-weight-bold gradient-text mb-2">{{ $t('services.comingSoon') }}</div>
+                <p class="text-body-1 text-medium-emphasis">
+                  {{ $t('services.underDevelopment') }}
+                </p>
+              </v-card>
           </div>
         </div>
 
@@ -372,6 +387,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 import { useSimulatorStore } from '@/stores/simulatorStore'
 import { useAppStore } from '@/stores/appStore'
 import { useAuthStore } from '@/stores/authStore'
@@ -382,6 +398,7 @@ import MarkdownIt from 'markdown-it'
 import appointmentService, { Appointment } from '@/services/appointmentService'
 import diagnosisService, { Diagnosis } from '@/services/diagnosisService'
 
+const route = useRoute()
 const md = new MarkdownIt({
   html: false,
   linkify: true,
@@ -435,6 +452,9 @@ const scrollToBottom = async () => {
 watch(() => simulatorStore.chatMessages, scrollToBottom, { deep: true })
 
 onMounted(() => {
+  if (route.query.tab) {
+    activeTab.value = route.query.tab as string
+  }
   fetchDashboardData()
   simulatorStore.fetchSessions()
 })
@@ -845,5 +865,29 @@ const handleChatDrop = (event: DragEvent) => {
   0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
   40% {transform: translateY(-20px);}
   60% {transform: translateY(-10px);}
+}
+
+.coming-soon-card {
+  border: 2px dashed rgba(var(--v-border-color), 0.3) !important;
+  background: linear-gradient(145deg, rgb(var(--v-theme-surface)), rgba(var(--v-theme-primary), 0.03)) !important;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.coming-soon-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(var(--v-theme-primary), 0.5) !important;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
+}
+
+.border-dashed-2 {
+  border-style: dashed !important;
+  border-width: 2px !important;
+}
+
+.gradient-text {
+  background: linear-gradient(45deg, #159a8e, #2edbc7);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 </style>
