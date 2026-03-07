@@ -45,7 +45,7 @@
       </section>
 
       <!-- ==================== SERVICES SECTION ==================== -->
-      <section class="py-16">
+      <section id="services" class="py-16">
         <v-container>
           <div class="text-center mb-10">
             <h2 class="section-title">Our Services</h2>

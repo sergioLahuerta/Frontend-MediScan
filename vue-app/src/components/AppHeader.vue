@@ -28,7 +28,7 @@
           :key="link.to"
           :to="link.to"
           class="nav-link"
-          :class="{ 'nav-link--active': $route.name === link.name }"
+          :class="{ 'nav-link--active': isLinkActive(link) }"
         >
           {{ link.label }}
         </router-link>
@@ -106,6 +106,7 @@ import { useAuthStore } from '@/stores/authStore'
 import { useRouter, useRoute } from 'vue-router'
 import { useTheme } from 'vuetify'
 import { useI18n } from 'vue-i18n'
+import { computed } from 'vue'
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -113,11 +114,15 @@ const route = useRoute()
 const theme = useTheme()
 const { locale } = useI18n()
 
-const navLinks = [
+const navLinks = computed(() => [
   { to: '/', name: 'home', label: 'Home' },
-  { to: '/services', name: 'services', label: 'Services' },
+  { 
+    to: authStore.isAuthenticated ? '/services' : '/#services', 
+    name: authStore.isAuthenticated ? 'services' : 'home', 
+    label: 'Services' 
+  },
   { to: '/contact', name: 'contact', label: 'Contact' },
-]
+])
 
 const handleLogout = () => {
   authStore.logout()
@@ -130,6 +135,19 @@ const toggleTheme = () => {
 
 const setLocale = (lang: string) => {
   locale.value = lang
+}
+
+const isLinkActive = (link: any) => {
+  if (link.to === '/') {
+    return route.name === 'home' && !route.hash
+  }
+  if (link.to === '/#services') {
+    return route.name === 'home' && route.hash === '#services'
+  }
+  if (link.to === '/services') {
+    return route.name === 'services'
+  }
+  return route.name === link.name
 }
 </script>
 

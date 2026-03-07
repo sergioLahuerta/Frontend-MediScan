@@ -340,7 +340,7 @@ const contactInfo = [
 ]
 
 onMounted(async () => {
-  loadProfessionals()
+  // Professionals are loaded via watch when switching to 'appointment' tab
 })
 
 watch(activeTab, (newTab) => {
