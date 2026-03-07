@@ -5,7 +5,7 @@
         <component :is="Component" />
       </transition>
     </router-view>
-    <!-- Snackbar global (reemplaza alerts nativos) -->
+    
     <v-snackbar
       v-model="appStore.snackbar.show"
       :color="appStore.snackbar.color"
@@ -23,14 +23,7 @@
   </v-app>
 </template>
 
-<script>
-import { useAppStore } from './stores/appStore'
-
-export default {
-  name: 'App',
-  setup() {
-    const appStore = useAppStore()
-    return { appStore }
-  },
-}
+<script setup lang="ts">
+import { useAppStore } from '@/stores/appStore'
+const appStore = useAppStore()
 </script>

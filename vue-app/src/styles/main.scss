@@ -8,18 +8,36 @@
 // Variables
 $color-primary: #159a8e;
 $color-primary-dark: #0f8b81;
-$color-primary-light: #e8faf7;
-$color-secondary: #f5f7fa;
+$color-primary-light: rgba(21, 154, 142, 0.1);
 $color-white: #ffffff;
-$color-text: #1f2937;
-$color-text-light: #6b7280;
-$color-text-lighter: #9ca3af;
-$color-border: #e5e7eb;
-$color-accent: #ff6b6b;
-$bg-light: #f9fafb;
 $radius: 12px;
-$shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-$shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+$shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+
+:root {
+  --v-theme-hero-gradient: linear-gradient(135deg, #e8faf7 0%, rgba(21, 154, 142, 0.05) 50%, #ffffff 100%);
+  --color-text: #1f2937;
+  --color-text-light: #6b7280;
+  --color-text-lighter: #9ca3af;
+  --color-border: #e5e7eb;
+  --bg-light: #f9fafb;
+}
+
+.v-theme--dark {
+  --v-theme-hero-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  --color-text: #f8fafc;
+  --color-text-light: #94a3b8;
+  --color-text-lighter: #64748b;
+  --color-border: #334155;
+  --bg-light: #0f172a;
+}
+
+$color-text: var(--color-text);
+$color-text-light: var(--color-text-light);
+$color-text-lighter: var(--color-text-lighter);
+$color-border: var(--color-border);
+$color-accent: #ff6b6b;
+$bg-light: var(--bg-light);
 
 // ==========================================
 // RESET Y BASE
@@ -55,10 +73,10 @@ body {
 
 .section-subtitle {
   font-size: 1.1rem;
-  color: $color-text-light;
   max-width: 600px;
   margin: 0 auto;
   line-height: 1.7;
+  opacity: 0.8;
 }
 
 .gradient-text {
@@ -72,7 +90,7 @@ body {
 // HERO SECTION
 // ==========================================
 .hero-section {
-  background: linear-gradient(135deg, $color-primary-light 0%, rgba($color-primary, 0.05) 50%, $color-white 100%);
+  background: var(--v-theme-hero-gradient);
   padding: 5rem 2rem;
   text-align: center;
   position: relative;

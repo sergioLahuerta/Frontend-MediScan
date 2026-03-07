@@ -8,7 +8,7 @@
       <section class="hero-section">
         <v-container class="text-center position-relative" style="z-index: 1;">
           <div class="hero-badge mb-4">
-            <v-chip color="primary" variant="tonal" size="small" prepend-icon="mdi-star-four-points">
+            <v-chip color="primary" variant="flat" size="small" prepend-icon="mdi-star-four-points" class="px-4">
               Futuristic Medical Technology
             </v-chip>
           </div>
@@ -60,10 +60,10 @@
               :key="service.title"
               cols="12" sm="6" lg="4"
             >
-              <v-card class="service-card h-100" rounded="lg" elevation="1" border>
+              <v-card class="service-card h-100" rounded="xl" elevation="2">
                 <v-card-text class="pa-6">
                   <div class="card-icon-wrapper" :style="{ background: service.bg }">
-                    {{ service.emoji }}
+                    <v-icon :icon="service.icon" color="primary" size="32"></v-icon>
                   </div>
                   <h3 class="service-title mb-2">{{ service.title }}</h3>
                   <p class="service-desc">{{ service.description }}</p>
@@ -89,7 +89,7 @@
             >
               <div class="step-card text-center px-4">
                 <div class="step-number">{{ i + 1 }}</div>
-                <div style="font-size: 2rem; margin-bottom: 1rem;">{{ step.emoji }}</div>
+                <v-icon :icon="step.icon" size="48" color="primary" class="mb-4"></v-icon>
                 <h3 class="step-title mb-2">{{ step.title }}</h3>
                 <p class="step-desc">{{ step.description }}</p>
               </div>
@@ -109,7 +109,7 @@
               class="text-center"
             >
               <div class="stat-item">
-                <div class="stat-icon">{{ stat.icon }}</div>
+                <v-icon :icon="stat.icon" size="48" class="mb-2"></v-icon>
                 <div class="stat-number">{{ stat.value }}</div>
                 <div class="stat-label">{{ stat.label }}</div>
               </div>
@@ -146,7 +146,7 @@
       </section>
 
       <!-- ==================== CTA SECTION ==================== -->
-      <section class="py-16 cta-bg">
+      <section class="py-16 cta-bg mt-16">
         <v-container class="text-center">
           <h2 class="section-title mb-4" style="color: white;">
             Ready to Revolutionize Your Health?
@@ -184,90 +184,85 @@
   </div>
 </template>
 
-<script>
-import AppHeader from '../components/AppHeader.vue'
-import AppFooter from '../components/AppFooter.vue'
-import BottomNav from '../components/BottomNav.vue'
+<script setup lang="ts">
+import AppHeader from '@/components/AppHeader.vue'
+import AppFooter from '@/components/AppFooter.vue'
+import BottomNav from '@/components/BottomNav.vue'
 
-export default {
-  name: 'HomeView',
-  components: { AppHeader, AppFooter, BottomNav },
-  data() {
-    return {
-      services: [
-        {
-          emoji: '🔍',
-          title: 'AI Diagnostics',
-          description: 'AI trained with thousands of medical images to provide precise diagnostic predictions.',
-          bg: '#e8faf7',
-        },
-        {
-          emoji: '🎨',
-          title: 'Interactive 3D Models',
-          description: 'Explore human anatomy in 3D with clear, interactive models to learn anatomy.',
-          bg: '#eff6ff',
-        },
-        {
-          emoji: '📍',
-          title: 'Biomarker Compensation',
-          description: 'Upload images and compare them against similar cases, clearing valuable biomarker information.',
-          bg: '#fef3c7',
-        },
-        {
-          emoji: '👨‍⚕️',
-          title: 'Online Medical Assistance',
-          description: 'Verified medical professionals provide certified opinions based on your studies.',
-          bg: '#f0fdf4',
-        },
-        {
-          emoji: '📚',
-          title: 'Training & Courses',
-          description: 'Interactive courses and learning resources covering a variety of medical specialties.',
-          bg: '#fdf4ff',
-        },
-        {
-          emoji: '🎬',
-          title: 'Visualization Kit',
-          description: 'Advanced visualization tools to improve the interpretation of medical images.',
-          bg: '#fff1f2',
-        },
-      ],
-      steps: [
-        { emoji: '📤', title: 'Upload Image', description: 'Upload a photo of the affected area or select a stored image.' },
-        { emoji: '🤖', title: 'AI Analysis', description: 'Our AI analyzes and compares it with thousands of clinical cases.' },
-        { emoji: '📋', title: 'Receive Report', description: 'Receive an enhanced diagnostic report with recommendations.' },
-      ],
-      stats: [
-        { icon: '👥', value: '3K+', label: 'Active Users' },
-        { icon: '🎯', value: '95%', label: 'AI Precision' },
-        { icon: '✅', value: '1K+', label: 'Diagnostics Processed' },
-      ],
-      roadmap: [
-        {
-          title: 'Q4 2026 — Initial Release',
-          description: 'Initial release of AI platform, 3D models, and diagnostic comparison system.',
-          status: 'completed',
-          statusLabel: '✓ Completed',
-          color: 'success',
-        },
-        {
-          title: 'Q1 2026 — Improvements',
-          description: 'Improved medical interface, online assistance, and interactive courses.',
-          status: 'in-progress',
-          statusLabel: '⚙ In Progress',
-          color: 'warning',
-        },
-        {
-          title: 'Q2 2026 — Expansion',
-          description: 'Expanded AI functionalities and highly accurate 3D anatomical models.',
-          status: 'planned',
-          statusLabel: '📋 Planned',
-          color: 'secondary',
-        },
-      ],
-    }
+const services = [
+  {
+    icon: 'mdi-file-find-outline',
+    title: 'AI Diagnostics',
+    description: 'AI trained with thousands of medical images to provide precise diagnostic predictions.',
+    bg: 'rgba(21, 154, 142, 0.1)',
   },
-}
+  {
+    icon: 'mdi-cube-outline',
+    title: 'Interactive 3D Models',
+    description: 'Explore human anatomy in 3D with clear, interactive models to learn anatomy.',
+    bg: 'rgba(21, 154, 142, 0.1)',
+  },
+  {
+    icon: 'mdi-chart-bell-curve-cumulative',
+    title: 'Biomarker Compensation',
+    description: 'Upload images and compare them against similar cases, clearing valuable biomarker information.',
+    bg: 'rgba(21, 154, 142, 0.1)',
+  },
+  {
+    icon: 'mdi-doctor',
+    title: 'Online Medical Assistance',
+    description: 'Verified medical professionals provide certified opinions based on your studies.',
+    bg: 'rgba(21, 154, 142, 0.1)',
+  },
+  {
+    icon: 'mdi-book-open-variant',
+    title: 'Training & Courses',
+    description: 'Interactive courses and learning resources covering a variety of medical specialties.',
+    bg: 'rgba(21, 154, 142, 0.1)',
+  },
+  {
+    icon: 'mdi-folder-eye-outline',
+    title: 'Visualization Kit',
+    description: 'Advanced visualization tools to improve the interpretation of medical images.',
+    bg: 'rgba(21, 154, 142, 0.1)',
+  },
+]
+
+const steps = [
+  { icon: 'mdi-cloud-upload-outline', title: 'Upload Image', description: 'Upload a photo of the affected area or select a stored image.' },
+  { icon: 'mdi-brain', title: 'AI Analysis', description: 'Our AI analyzes and compares it with thousands of clinical cases.' },
+  { icon: 'mdi-clipboard-text-outline', title: 'Receive Report', description: 'Receive an enhanced diagnostic report with recommendations.' },
+]
+
+const stats = [
+  { icon: 'mdi-account-group-outline', value: '3K+', label: 'Active Users' },
+  { icon: 'mdi-target', value: '95%', label: 'AI Precision' },
+  { icon: 'mdi-check-decagram-outline', value: '1K+', label: 'Diagnostics Processed' },
+]
+
+const roadmap = [
+  {
+    title: 'Q4 2026 — Initial Release',
+    description: 'Initial release of AI platform, 3D models, and diagnostic comparison system.',
+    status: 'completed',
+    statusLabel: '✓ Completed',
+    color: 'success',
+  },
+  {
+    title: 'Q1 2026 — Improvements',
+    description: 'Improved medical interface, online assistance, and interactive courses.',
+    status: 'in-progress',
+    statusLabel: '⚙ In Progress',
+    color: 'warning',
+  },
+  {
+    title: 'Q2 2026 — Expansion',
+    description: 'Expanded AI functionalities and highly accurate 3D anatomical models.',
+    status: 'planned',
+    statusLabel: '📋 Planned',
+    color: 'secondary',
+  },
+]
 </script>
 
 <style lang="scss" scoped>

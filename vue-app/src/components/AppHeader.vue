@@ -3,17 +3,22 @@
   <v-app-bar
     class="app-header"
     elevation="0"
-    color="white"
     border="b"
     height="72"
   >
     <v-container class="d-flex align-center justify-space-between h-100 py-0">
       <!-- Logo -->
       <router-link to="/" class="header-logo text-decoration-none">
-        <v-avatar size="40" class="mr-2" color="primary" rounded="lg">
-          <v-icon color="white" size="24">mdi-heart-pulse</v-icon>
-        </v-avatar>
-        <span class="logo-text">MediScan</span>
+        <v-img
+          src="/logo.png"
+          alt="MediScan Branding"
+          width="40"
+          height="40"
+          class="mr-2"
+          contain
+          style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));"
+        />
+        <span class="logo-text font-weight-bold">MediScan</span>
       </router-link>
 
       <!-- Nav Desktop -->
@@ -29,33 +34,102 @@
         </router-link>
       </nav>
 
-      <!-- CTA Button Desktop -->
-      <v-btn
-        class="d-none d-md-flex"
-        color="primary"
-        rounded="lg"
-        size="large"
-        @click="$router.push('/services')"
-      >
-        <v-icon start>mdi-robot</v-icon>
-        Try AI
-      </v-btn>
+      <!-- Auth & CTA Section -->
+      <div class="d-none d-md-flex align-center" style="gap: 1rem;">
+        <template v-if="!authStore.isAuthenticated">
+          <v-btn variant="text" color="primary" @click="$router.push('/login')">Log In</v-btn>
+          <v-btn color="primary" variant="tonal" rounded="lg" @click="$router.push('/register')">Join</v-btn>
+        </template>
+        
+        <template v-else>
+          <v-menu min-width="200px" rounded="lg">
+            <template v-slot:activator="{ props }">
+              <v-btn icon v-bind="props">
+                <v-avatar color="primary" size="36">
+                  <v-icon color="white">mdi-account</v-icon>
+                </v-avatar>
+              </v-btn>
+            </template>
+            <v-list class="pa-2">
+              <v-list-item
+                prepend-icon="mdi-logout"
+                title="Log Out"
+                rounded="lg"
+                color="error"
+                @click="handleLogout"
+              ></v-list-item>
+            </v-list>
+          </v-menu>
+        </template>
+
+        <v-divider vertical class="mx-2 my-4"></v-divider>
+
+        <!-- Theme Switcher -->
+        <v-btn icon @click="toggleTheme" title="Toggle Theme">
+          <v-icon>{{ theme.global.name.value === 'dark' ? 'mdi-weather-sunny' : 'mdi-weather-night' }}</v-icon>
+        </v-btn>
+
+        <!-- Language Switcher -->
+        <v-menu offset-y>
+          <template v-slot:activator="{ props }">
+            <v-btn variant="text" v-bind="props" class="text-none">
+              <v-icon start>mdi-translate</v-icon>
+              {{ locale === 'es' ? 'ES' : 'EN' }}
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item @click="setLocale('en')" :active="locale === 'en'">
+              <v-list-item-title>English</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="setLocale('es')" :active="locale === 'es'">
+              <v-list-item-title>Español</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+        
+        <v-btn
+          color="primary"
+          rounded="lg"
+          elevation="2"
+          @click="$router.push('/services')"
+        >
+          <v-icon start>mdi-robot</v-icon>
+          AI Simulator
+        </v-btn>
+      </div>
     </v-container>
   </v-app-bar>
 </template>
 
-<script>
-export default {
-  name: 'AppHeader',
-  data() {
-    return {
-      navLinks: [
-        { to: '/', name: 'home', label: 'Home' },
-        { to: '/services', name: 'services', label: 'Services' },
-        { to: '/contact', name: 'contact', label: 'Contact' },
-      ],
-    }
-  },
+<script setup lang="ts">
+import { useAuthStore } from '@/stores/authStore'
+import { useRouter, useRoute } from 'vue-router'
+import { useTheme } from 'vuetify'
+import { useI18n } from 'vue-i18n'
+
+const authStore = useAuthStore()
+const router = useRouter()
+const route = useRoute()
+const theme = useTheme()
+const { locale } = useI18n()
+
+const navLinks = [
+  { to: '/', name: 'home', label: 'Home' },
+  { to: '/services', name: 'services', label: 'Services' },
+  { to: '/contact', name: 'contact', label: 'Contact' },
+]
+
+const handleLogout = () => {
+  authStore.logout()
+  router.push('/login')
+}
+
+const toggleTheme = () => {
+  theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
+}
+
+const setLocale = (lang: string) => {
+  locale.value = lang
 }
 </script>
 
@@ -74,19 +148,22 @@ export default {
 
 .nav-link {
   text-decoration: none;
-  color: #1f2937;
+  color: inherit;
+  opacity: 0.7;
   font-weight: 500;
   font-size: 0.95rem;
-  transition: color 0.2s;
+  transition: all 0.2s;
   padding-bottom: 2px;
   border-bottom: 2px solid transparent;
 
   &:hover {
     color: #159a8e;
+    opacity: 1;
   }
 
   &--active {
     color: #159a8e;
+    opacity: 1;
     font-weight: 600;
     border-bottom-color: #159a8e;
   }

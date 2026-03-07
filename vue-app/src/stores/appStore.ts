@@ -1,7 +1,16 @@
 import { defineStore } from 'pinia'
 
+interface AppState {
+  snackbar: {
+    show: boolean;
+    message: string;
+    color: string;
+  };
+  mobileDrawer: boolean;
+}
+
 export const useAppStore = defineStore('app', {
-    state: () => ({
+    state: (): AppState => ({
         snackbar: {
             show: false,
             message: '',
@@ -10,7 +19,7 @@ export const useAppStore = defineStore('app', {
         mobileDrawer: false,
     }),
     actions: {
-        showSnackbar(message, color = 'primary') {
+        showSnackbar(message: string, color: string = 'primary') {
             this.snackbar = { show: true, message, color }
         },
         hideSnackbar() {
