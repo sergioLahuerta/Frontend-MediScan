@@ -1,0 +1,15 @@
+# MediScan Frontend Legacy & Build Artifacts
+node_modules/
+dist/
+.vscode/
+.env*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+
+# Root development artifacts
+temp/
+source/
+build/
+img/
