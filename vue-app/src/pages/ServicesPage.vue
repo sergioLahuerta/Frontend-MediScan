@@ -129,7 +129,7 @@
                   <span class="text-xs bg-white/20 px-2 py-1 rounded-full border border-white/30">Sesión #{{ simulatorStore.chatSessionId ? 'Activa' : 'Nueva' }}</span>
                 </header>
 
-                <div id="chat-box" class="chat-container overflow-y-auto p-4 space-y-4">
+              <div class="chat-messages" ref="chatBoxRef">
                   <div v-if="simulatorStore.chatMessages.length === 0" class="flex justify-start">
                     <div class="message-ai p-3 max-w-[85%] shadow-sm border border-gray-100">
                       Hola. Estoy listo para asistirle en el análisis clínico. ¿Desea adjuntar una imagen o describir algún síntoma?
@@ -143,7 +143,22 @@
                 </div>
 
                 <div class="p-4 border-t bg-white">
-                  <div class="flex items-end gap-2 bg-gray-50 p-2 rounded-xl border border-gray-200">
+                  <!-- Guest limit banner -->
+                  <v-alert
+                    v-if="simulatorStore.guestLimitReached"
+                    type="warning"
+                    variant="tonal"
+                    border="start"
+                    class="mb-3"
+                    rounded="lg"
+                    density="compact"
+                  >
+                    Límite diario alcanzado.
+                    <router-link to="/register" class="font-weight-bold">Regístrate gratis</router-link>
+                    para continuar sin límites.
+                  </v-alert>
+
+                  <div class="flex items-end gap-2 bg-gray-50 p-2 rounded-xl border border-gray-200" :class="{ 'opacity-50 pointer-events-none': simulatorStore.guestLimitReached }">
                     <label class="cursor-pointer p-2 hover:bg-gray-200 rounded-lg transition-colors group">
                       <input ref="fileInputRef" type="file" class="hidden" accept="image/*" @change="handleFileSelect">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -153,9 +168,9 @@
                       </svg>
                     </label>
 
-                    <textarea v-model="simulatorStore.chatInput" placeholder="Escriba su consulta..." class="flex-1 p-2 bg-transparent focus:outline-none resize-none min-h-[40px] max-h-[150px] text-gray-700" rows="1" @keydown.enter.prevent="simulatorStore.sendChat()" @input="adjustTextareaHeight"></textarea>
+                    <textarea v-model="simulatorStore.chatInput" placeholder="Escriba su consulta..." class="flex-1 p-2 bg-transparent focus:outline-none resize-none min-h-[40px] max-h-[150px] text-gray-700" rows="1" @keydown.enter.prevent="sendChatWithFile" @input="adjustTextareaHeight"></textarea>
 
-                    <button @click="simulatorStore.sendChat()" class="bg-primary hover:bg-primary-dark text-white p-2 rounded-lg transition-all shadow-md active:scale-95">
+                    <button @click="sendChatWithFile" class="bg-primary hover:bg-primary-dark text-white p-2 rounded-lg transition-all shadow-md active:scale-95">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                       </svg>
@@ -166,33 +181,6 @@
                   </div>
                 </div>
               </div>
-
-              <!-- Analyze Button -->
-              <v-btn
-                block
-                size="x-large"
-                color="primary"
-                rounded="lg"
-                :loading="simulatorStore.isAnalyzing"
-                :disabled="!simulatorStore.hasImage"
-                @click="analyze"
-              >
-                <v-icon start>mdi-robot-happy</v-icon>
-                Analyze with AI
-              </v-btn>
-
-              <!-- Reset -->
-              <v-btn
-                v-if="simulatorStore.hasImage"
-                block
-                variant="text"
-                class="mt-2"
-                color="grey"
-                @click="simulatorStore.resetAnalysis()"
-              >
-                <v-icon start>mdi-refresh</v-icon>
-                Reset
-              </v-btn>
             </v-col>
 
             <!-- Right: Results Column -->
@@ -417,11 +405,60 @@ const analyze = async () => {
   await simulatorStore.analyzeImage()
   appStore.showSnackbar('Analysis complete! Review your results.', 'success')
 }
+
+const sendChatWithFile = async () => {
+  const file = fileInputRef.value?.files?.[0] ?? null
+  await simulatorStore.sendChat(file)
+  // clear the file input after sending
+  if (fileInputRef.value) fileInputRef.value.value = ''
+}
 </script>
 
 <style scoped>
 .chat-container {
-  height: calc(100vh - 160px);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e5e7eb;
+  border-radius: 0 0 12px 12px;
+  overflow: hidden;
+}
+
+.chat-messages {
+  position: relative;
+  height: 380px;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+/* Background logo ONLY inside the messages area */
+.chat-messages::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 240px;
+  height: 240px;
+  background-image: url('/logo.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+.chat-messages > div {
+  position: relative;
+  z-index: 1;
+}
+
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background-color: rgba(21, 154, 142, 0.3);
+  border-radius: 10px;
 }
 
 .message-user {
@@ -434,44 +471,6 @@ const analyze = async () => {
   background-color: #f3f4f6;
   color: #1f2937;
   border-radius: 15px 15px 15px 2px;
-}
-
-#chat-box {
-  position: relative;
-  height: calc(100vh - 160px);
-  overflow-y: auto;
-  padding: 1rem;
-}
-
-#chat-box::before {
-  content: "";
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  height: 100%;
-  background-image: url('/logo.png');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 400px;
-  opacity: 0.4;
-  z-index: 0;
-  pointer-events: none;
-}
-
-#chat-box > div {
-  position: relative;
-  z-index: 1;
-}
-
-#chat-box::-webkit-scrollbar {
-  width: 6px;
-}
-
-#chat-box::-webkit-scrollbar-thumb {
-  background-color: rgba(21, 154, 142, 0.3);
-  border-radius: 10px;
 }
 </style>
 

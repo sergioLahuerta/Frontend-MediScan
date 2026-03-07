@@ -1,38 +1,39 @@
 import { defineStore } from 'pinia'
 
 interface AnalysisResult {
-  confidence: number;
-  diagnosis: string;
-  severity: string;
-  recommendations: string[];
-  details: { label: string; value: string }[];
+    confidence: number;
+    diagnosis: string;
+    severity: string;
+    recommendations: string[];
+    details: { label: string; value: string }[];
 }
 
 interface HistoryItem {
-  id: number;
-  date: string;
-  imageUrl: string | null;
-  confidence: number;
-  diagnosis: string;
+    id: number;
+    date: string;
+    imageUrl: string | null;
+    confidence: number;
+    diagnosis: string;
 }
 
 interface ChatMessage {
-  id: number;
-  sender: 'user' | 'ai';
-  text: string;
+    id: number;
+    sender: 'user' | 'ai';
+    text: string;
 }
 
 interface SimulatorState {
-  uploadedImage: File | null;
-  uploadedImageUrl: string | null;
-  isAnalyzing: boolean;
-  results: AnalysisResult | null;
-  activeTab: string;
-  analysisHistory: HistoryItem[];
-  // chat support
-  chatMessages: ChatMessage[];
-  chatInput: string;
-  chatSessionId: string | null;
+    uploadedImage: File | null;
+    uploadedImageUrl: string | null;
+    isAnalyzing: boolean;
+    results: AnalysisResult | null;
+    activeTab: string;
+    analysisHistory: HistoryItem[];
+    // chat support
+    chatMessages: ChatMessage[];
+    chatInput: string;
+    chatSessionId: string | null;
+    guestLimitReached: boolean;
 }
 
 export const useSimulatorStore = defineStore('simulator', {
@@ -46,6 +47,7 @@ export const useSimulatorStore = defineStore('simulator', {
         chatMessages: [],
         chatInput: '',
         chatSessionId: null,
+        guestLimitReached: false,
     }),
     getters: {
         hasResults: (state) => state.results !== null,
@@ -61,10 +63,10 @@ export const useSimulatorStore = defineStore('simulator', {
             if (!this.uploadedImage) return
             this.isAnalyzing = true
             this.results = null
-            
+
             // Artificial delay to simulate AI processing
             await new Promise((resolve) => setTimeout(resolve, 2500))
-            
+
             this.results = {
                 confidence: Math.floor(Math.random() * 20) + 75,
                 diagnosis: 'Soft tissue lesion detected',
@@ -80,7 +82,7 @@ export const useSimulatorStore = defineStore('simulator', {
                     { label: 'Case comparison', value: '1,247 cases analyzed' },
                 ],
             }
-            
+
             this.analysisHistory.unshift({
                 id: Date.now(),
                 date: new Date().toLocaleDateString(),
@@ -88,7 +90,7 @@ export const useSimulatorStore = defineStore('simulator', {
                 confidence: this.results!.confidence,
                 diagnosis: this.results!.diagnosis,
             })
-            
+
             this.isAnalyzing = false
         },
         resetAnalysis() {
@@ -99,29 +101,49 @@ export const useSimulatorStore = defineStore('simulator', {
         },
         // chat actions
         addChatMessage(sender: 'user' | 'ai', text: string) {
-            this.chatMessages.push({ id: Date.now(), sender, text });
+            this.chatMessages.push({ id: Date.now(), sender, text })
         },
-        async sendChat() {
-            if (!this.chatInput.trim()) return;
-            const text = this.chatInput.trim();
-            this.addChatMessage('user', text);
-            this.chatInput = '';
+        async sendChat(file?: File | null) {
+            if (!this.chatInput.trim() && !file) return
+            if (this.guestLimitReached) return
 
-            // ensure session id
+            const text = this.chatInput.trim()
+            this.addChatMessage('user', text || 'Imagen enviada para análisis clínico')
+            this.chatInput = ''
+
+            const chatService = (await import('../services/chatService')).default
+
+            // Create session on first message
             if (!this.chatSessionId) {
-                this.chatSessionId = crypto.randomUUID();
+                try {
+                    this.chatSessionId = await chatService.createSession()
+                } catch {
+                    this.addChatMessage('ai', 'No se pudo iniciar la sesión. Verifica que el servidor esté activo.')
+                    return
+                }
             }
 
             try {
-                const base64 = this.uploadedImageUrl ? this.uploadedImageUrl.split(',')[1] : null;
-                const resp = await (await import('../services/chatService')).default.process({
-                    chatSessionId: this.chatSessionId,
-                    message: text,
-                    base64Image: base64,
-                });
-                this.addChatMessage('ai', resp.data.response);
-            } catch (err) {
-                this.addChatMessage('ai', 'Error contacting AI');
+                const result = await chatService.sendMessage(
+                    this.chatSessionId,
+                    text,
+                    file ?? this.uploadedImage
+                )
+                this.addChatMessage('ai', result.aiResponse)
+            } catch (err: any) {
+                // Handle 429 guest daily limit
+                const status = err?.response?.status
+                if (status === 429) {
+                    const backendMsg = err?.response?.data?.message
+                    this.guestLimitReached = true
+                    this.addChatMessage(
+                        'ai',
+                        backendMsg ||
+                        'Has alcanzado el límite de 3 mensajes gratuitos al día. Crea una cuenta para continuar sin límites.'
+                    )
+                } else {
+                    this.addChatMessage('ai', 'Error al contactar con la IA. Comprueba la conexión.')
+                }
             }
         }
     },
