@@ -5,7 +5,7 @@
       <div class="blob blob-2"></div>
     </div>
 
-    <!-- Toggles Top Left -->
+    <!-- Toggles UI -->
     <div class="page-toggles pa-4 d-flex align-center ga-3">
       <v-btn 
         icon 
