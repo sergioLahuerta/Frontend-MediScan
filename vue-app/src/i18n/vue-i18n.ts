@@ -147,9 +147,13 @@ const messages = {
       info: {
         title: 'Contact Information',
         direction: 'Direction',
+        directionValue: 'Calle Medicina 123, 4th Floor<br>28001 Madrid, Spain',
         phones: 'Phones',
+        phoneValue: 'General: +34 91 123 45 67<br>Emergency: +34 600 123 456',
         emails: 'Emails',
+        emailValue: "info{'@'}mediscan.com<br>support{'@'}mediscan.com",
         schedule: 'Schedule',
+        scheduleValue: 'Mon - Fri: 9:00 - 20:00<br>Sat - Sun: 9:00 - 14:00'
       },
       channels: 'Support Channels',
       channel: {
@@ -403,9 +407,13 @@ const messages = {
       info: {
         title: 'Información de Contacto',
         direction: 'Dirección',
+        directionValue: 'Calle Medicina 123, Piso 4<br>28001 Madrid, España',
         phones: 'Teléfonos',
+        phoneValue: 'General: +34 91 123 45 67<br>Urgencias: +34 600 123 456',
         emails: 'Emails',
+        emailValue: "info{'@'}mediscan.com<br>soporte{'@'}mediscan.com",
         schedule: 'Horarios',
+        scheduleValue: 'Lun - Vie: 9:00 - 20:00<br>Sáb - Dom: 9:00 - 14:00'
       },
       channels: 'Canales de Soporte',
       channel: {

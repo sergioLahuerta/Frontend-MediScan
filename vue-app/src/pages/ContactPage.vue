@@ -48,7 +48,7 @@
                     </v-avatar>
                     <div>
                       <p class="info-label">{{ $t(info.label) }}</p>
-                      <p class="info-value" v-html="info.value"></p>
+                      <p class="info-value" v-html="$t(info.value)"></p>
                     </div>
                   </div>
                 </v-card-text>
@@ -67,15 +67,6 @@
                   </v-list>
                 </v-card-text>
               </v-card>
-
-              <!-- Social Links -->
-              <div class="d-flex justify-center gap-4 py-4">
-                <v-btn icon color="green-darken-1" variant="tonal" size="small"><v-icon>mdi-whatsapp</v-icon></v-btn>
-                <v-btn icon color="blue" variant="tonal" size="small"><v-icon>mdi-twitter</v-icon></v-btn>
-                <v-btn icon color="pink" variant="tonal" size="small"><v-icon>mdi-instagram</v-icon></v-btn>
-                <v-btn icon color="blue-darken-3" variant="tonal" size="small"><v-icon>mdi-facebook</v-icon></v-btn>
-              </div>
-
             </div>
           </v-col>
 
@@ -342,14 +333,13 @@ const translatedSubjectOptions = computed(() => {
 })
 
 const contactInfo = [
-  { icon: 'mdi-map-marker', label: 'contact.info.direction', value: 'Calle Medicina 123, Piso 4<br>28001 Madrid, España' },
-  { icon: 'mdi-phone', label: 'contact.info.phones', value: 'General: +34 91 123 45 67<br>Emergency: +34 600 123 456' },
-  { icon: 'mdi-email', label: 'contact.info.emails', value: 'info@mediscan.com<br>soporte@mediscan.com' },
-  { icon: 'mdi-clock-outline', label: 'contact.info.schedule', value: 'Mon - Fri: 9:00 - 20:00<br>Sat - Sun: 9:00 - 14:00' },
+  { icon: 'mdi-map-marker', label: 'contact.info.direction', value: 'contact.info.directionValue' },
+  { icon: 'mdi-phone', label: 'contact.info.phones', value: 'contact.info.phoneValue' },
+  { icon: 'mdi-email', label: 'contact.info.emails', value: 'contact.info.emailValue' },
+  { icon: 'mdi-clock-outline', label: 'contact.info.schedule', value: 'contact.info.scheduleValue' },
 ]
 
 onMounted(async () => {
-  // Professionals are loaded via watch when switching to 'appointment' tab
 })
 
 watch(activeTab, (newTab) => {
