@@ -17,5 +17,13 @@ export default {
     } catch (error: any) {
       throw error.response?.data || { message: 'Registration failed' };
     }
+  },
+  async forgotPassword(data: any) {
+    try {
+      const response = await apiClient.post('/Auth/ForgotPassword', data);
+      return response.data;
+    } catch (error: any) {
+      throw error.response?.data || { message: 'Failed to update password' };
+    }
   }
 };

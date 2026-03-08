@@ -5,6 +5,49 @@
       <div class="blob blob-2"></div>
     </div>
 
+    <!-- Toggles Top Left -->
+    <div class="page-toggles pa-4 d-flex align-center ga-3">
+      <v-btn 
+        icon 
+        variant="tonal" 
+        color="white" 
+        size="small"
+        class="glass-toggle"
+        @click="toggleTheme"
+      >
+        <v-icon size="small">{{ theme.global.name.value === 'dark' ? 'mdi-weather-sunny' : 'mdi-weather-night' }}</v-icon>
+      </v-btn>
+
+      <v-menu offset-y transition="slide-y-transition">
+        <template v-slot:activator="{ props }">
+          <v-btn
+            variant="tonal"
+            color="white"
+            size="small"
+            class="px-2 font-weight-bold glass-toggle"
+            style="min-width: 44px; height: 32px;"
+            v-bind="props"
+          >
+            <v-icon start size="small">mdi-translate</v-icon>
+            {{ locale.toUpperCase() }}
+          </v-btn>
+        </template>
+        <v-list density="compact" rounded="lg" class="pa-2">
+          <v-list-item
+            v-for="lang in [{ code: 'en', label: 'English' }, { code: 'es', label: 'Español' }]"
+            :key="lang.code"
+            :value="lang.code"
+            :active="locale === lang.code"
+            color="primary"
+            rounded="md"
+            @click="locale = lang.code"
+          >
+            <v-list-item-title class="text-caption font-weight-bold">{{ lang.label }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </div>
+
     <v-row no-gutters class="fill-height">
       <!-- Right side (Form) -->
       <v-col cols="12" md="6" class="d-flex align-center justify-center pa-6 order-md-2">
@@ -19,14 +62,15 @@
                 contain
               />
             </div>
-            <h2 class="text-h4 font-weight-bold mb-2">Create Account</h2>
-            <p class="text-body-1 text-medium-emphasis">Join the MediScan community</p>
+            <h2 class="text-h4 font-weight-bold mb-2">{{ $t('auth.registerTitle') }}</h2>
+            <p class="text-body-1 text-medium-emphasis">{{ $t('auth.registerSubtitle') }}</p>
           </div>
 
           <v-form ref="form" v-model="valid" @submit.prevent="handleRegister">
             <v-text-field
               v-model="email"
-              label="Email Address"
+              :label="$t('auth.emailLabel')"
+              :placeholder="$t('auth.emailPlaceholder')"
               prepend-inner-icon="mdi-email-outline"
               variant="outlined"
               color="primary"
@@ -38,7 +82,8 @@
 
             <v-text-field
               v-model="password"
-              label="Contraseña"
+              :label="$t('auth.passwordLabel')"
+              :placeholder="$t('auth.passwordPlaceholder')"
               prepend-inner-icon="mdi-lock-outline"
               :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
               :type="showPassword ? 'text' : 'password'"
@@ -73,7 +118,8 @@
 
             <v-text-field
               v-model="confirmPassword"
-              label="Confirmar contraseña"
+              :label="$t('auth.confirmPasswordLabel')"
+              :placeholder="$t('auth.passwordPlaceholder')"
               prepend-inner-icon="mdi-lock-check-outline"
               :type="showPassword ? 'text' : 'password'"
               variant="outlined"
@@ -95,16 +141,16 @@
               :disabled="!valid"
               class="register-btn py-4"
             >
-              Get Started
+              {{ $t('auth.getStartedBtn') }}
               <v-icon end>mdi-account-plus</v-icon>
             </v-btn>
           </v-form>
 
           <div class="text-center mt-8">
             <p class="text-body-2 text-medium-emphasis">
-              Already have an account? 
+              {{ $t('auth.alreadyHaveAccount') }} 
               <v-btn variant="text" color="primary" density="compact" class="font-weight-bold" @click="$router.push('/login')">
-                Sign In
+                {{ $t('auth.signInLink') }}
               </v-btn>
             </p>
           </div>
@@ -114,9 +160,11 @@
       <!-- Left side (Info) -->
       <v-col cols="12" md="6" class="d-none d-md-flex flex-column justify-center align-center auth-hero pa-12 order-md-1">
         <div class="hero-content">
-          <h1 class="text-h2 font-weight-bold text-white mb-6 text-right">Start Your <span class="accent-text">Journey</span></h1>
+          <h1 class="text-h2 font-weight-bold text-white mb-6 text-right">
+            {{ $t('auth.heroRegisterTitle') }} <span class="accent-text">{{ $t('auth.heroRegisterAccent') }}</span>
+          </h1>
           <p class="text-h6 text-white text-opacity-80 mb-8 font-weight-light text-right">
-            Join thousands of health professionals and patients using AI to improve outcomes and monitor health status accurately.
+            {{ $t('auth.heroRegisterSubtitle') }}
           </p>
         </div>
       </v-col>
@@ -129,10 +177,16 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import { useAppStore } from '@/stores/appStore'
+import { useTheme } from 'vuetify'
+import { useI18n } from 'vue-i18n'
+
+const i18n = useI18n()
+const { locale } = i18n
 
 const router = useRouter()
 const authStore = useAuthStore()
 const appStore = useAppStore()
+const theme = useTheme()
 
 const valid = ref(false)
 const email = ref('')
@@ -140,22 +194,26 @@ const password = ref('')
 const confirmPassword = ref('')
 const showPassword = ref(false)
 
+const toggleTheme = () => {
+  theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
+}
+
 const emailRules = [
-  (v: string) => !!v || 'Email es obligatorio',
-  (v: string) => /.+@.+\..+/.test(v) || 'El email no es válido',
+  (v: string) => !!v || i18n.t('validation.required'),
+  (v: string) => /.+@.+\..+/.test(v) || i18n.t('validation.email'),
 ]
 
 const passwordRules = [
-  (v: string) => !!v || 'La contraseña es obligatoria',
-  (v: string) => v.length >= 8 || 'Mínimo 8 caracteres',
-  (v: string) => /[A-Z]/.test(v) || 'Debe contener al menos una letra mayúscula',
-  (v: string) => /[0-9]/.test(v) || 'Debe contener al menos un número',
-  (v: string) => /[^A-Za-z0-9]/.test(v) || 'Debe contener al menos un carácter especial (!@#$...)',
+  (v: string) => !!v || i18n.t('validation.required'),
+  (v: string) => v.length >= 8 || i18n.t('validation.passLength', { min: 8 }),
+  (v: string) => /[A-Z]/.test(v) || i18n.t('validation.passUpper'),
+  (v: string) => /[0-9]/.test(v) || i18n.t('validation.passNumber'),
+  (v: string) => /[^A-Za-z0-9]/.test(v) || i18n.t('validation.passSpecial'),
 ]
 
 const confirmPasswordRules = [
-  (v: string) => !!v || 'Por favor confirma tu contraseña',
-  (v: string) => v === password.value || 'Las contraseñas no coinciden',
+  (v: string) => !!v || i18n.t('validation.required'),
+  (v: string) => v === password.value || i18n.t('validation.passMatch'),
 ]
 
 // Password strength score 1-4
@@ -170,7 +228,13 @@ const passwordStrength = computed(() => {
 })
 
 const strengthLabel = computed(() => {
-  const labels = ['', 'Muy débil', 'Débil', 'Aceptable', 'Segura ✓']
+  const labels = [
+    '', 
+    i18n.t('auth.strength.vWeak'), 
+    i18n.t('auth.strength.weak'), 
+    i18n.t('auth.strength.fair'), 
+    i18n.t('auth.strength.strong')
+  ]
   return labels[passwordStrength.value]
 })
 
@@ -198,11 +262,28 @@ const handleRegister = async () => {
 <style lang="scss" scoped>
 .register-page {
   background-color: rgb(var(--v-theme-background));
+  position: relative;
+  overflow: hidden;
+}
+
+.page-toggles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+
+.glass-toggle {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white !important;
 }
 
 .auth-hero {
   background: linear-gradient(225deg, rgb(var(--v-theme-primary)) 0%, rgb(var(--v-theme-secondary)) 100%);
   color: rgb(var(--v-theme-on-primary));
+  position: relative;
 }
 
 .glass-card {
@@ -212,7 +293,7 @@ const handleRegister = async () => {
 }
 
 .accent-text {
-  color: rgb(var(--v-theme-accent));
+  color: #ffd166;
 }
 
 .strength-bar {

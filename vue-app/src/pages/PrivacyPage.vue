@@ -7,7 +7,7 @@
         <v-container>
           <v-row justify="center">
             <v-col cols="12" md="8" class="text-center">
-              <v-chip color="primary" variant="tonal" class="mb-4 font-weight-bold" rounded="lg">Privacidad</v-chip>
+              <v-chip color="primary" variant="tonal" class="mb-4 font-weight-bold" rounded="lg">{{ $t('privacy.badge') }}</v-chip>
               <h1 class="section-title mb-4">{{ $t('privacy.title') }}</h1>
               <p class="text-subtitle-1 text-medium-emphasis">{{ $t('privacy.lastUpdated') }}</p>
             </v-col>

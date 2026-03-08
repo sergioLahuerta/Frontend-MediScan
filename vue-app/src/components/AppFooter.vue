@@ -32,13 +32,6 @@
           </ul>
         </v-col>
 
-        <v-col cols="12" md="2">
-          <h4 class="text-subtitle-1 font-weight-bold mb-6 opacity-80">{{ $t('footer.company') }}</h4>
-          <ul class="footer-list p-0">
-            <li class="mb-3"><router-link to="/contact" class="text-body-2 text-medium-emphasis text-decoration-none hover-primary">{{ $t('nav.contact') }}</router-link></li>
-            <li class="mb-3"><router-link to="/services" class="text-body-2 text-medium-emphasis text-decoration-none hover-primary">{{ $t('nav.services') }}</router-link></li>
-          </ul>
-        </v-col>
       </v-row>
 
       <v-divider class="my-10"></v-divider>
@@ -47,10 +40,6 @@
         <p class="text-caption text-medium-emphasis">
           © {{ new Date().getFullYear() }} MediScan Technologies. {{ $t('footer.rights') }}
         </p>
-        <div class="d-flex ga-6">
-          <router-link to="/privacy" class="text-caption text-medium-emphasis text-decoration-none hover-primary">{{ $t('footer.privacy') }}</router-link>
-          <router-link to="/terms" class="text-caption text-medium-emphasis text-decoration-none hover-primary">{{ $t('footer.terms') }}</router-link>
-        </div>
       </div>
     </v-container>
   </v-footer>
@@ -64,17 +53,23 @@ const footerLinks = [
     links: [
       { text: 'AI Simulator', to: '/services' },
       { text: '3D Anatomy', to: '/services?tab=models' },
-      { text: 'Courses', to: '#' },
-      { text: 'Certification', to: '#' },
+      { text: 'Smart Reports', to: '/reports' },
     ],
   },
   {
     title: 'footer.support',
     links: [
       { text: 'Help Center', to: '/contact' },
-      { text: 'Documentation', to: '#' },
-      { text: 'API Status', to: '#' },
-      { text: 'Security', to: '#' },
+      { text: 'FAQ', to: '/faq' },
+      { text: 'Contact Us', to: '/contact' },
+    ],
+  },
+  {
+    title: 'footer.legal',
+    links: [
+      { text: 'Privacy Policy', to: '/privacy' },
+      { text: 'Terms of Service', to: '/terms' },
+      { text: 'Cookies', to: '#' },
     ],
   },
 ]

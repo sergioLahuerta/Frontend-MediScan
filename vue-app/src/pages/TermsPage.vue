@@ -7,7 +7,7 @@
         <v-container>
           <v-row justify="center">
             <v-col cols="12" md="8" class="text-center">
-              <v-chip color="primary" variant="tonal" class="mb-4 font-weight-bold" rounded="lg">Legal</v-chip>
+              <v-chip color="primary" variant="tonal" class="mb-4 font-weight-bold" rounded="lg">{{ $t('terms.badge') }}</v-chip>
               <h1 class="section-title mb-4">{{ $t('terms.title') }}</h1>
               <p class="text-subtitle-1 text-medium-emphasis">{{ $t('terms.lastUpdated') }}</p>
             </v-col>

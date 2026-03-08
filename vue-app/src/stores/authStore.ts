@@ -92,6 +92,23 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
+    async forgotPassword(data: { email: string; newPassword: string }) {
+      this.loading = true;
+      this.error = null;
+      try {
+        await authService.forgotPassword({
+          email: data.email,
+          newPassword: data.newPassword
+        });
+        return true;
+      } catch (err: any) {
+        this.error = err.message || 'Failed to update password';
+        throw err;
+      } finally {
+        this.loading = false;
+      }
+    },
+
     logout() {
       this.user = null;
       this.token = null;

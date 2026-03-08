@@ -56,6 +56,12 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/pages/PrivacyPage.vue'),
         meta: { title: 'MediScan - Privacy Policy' },
     },
+    {
+        path: '/faq',
+        name: 'faq',
+        component: () => import('@/pages/FaqPage.vue'),
+        meta: { title: 'MediScan - FAQ' },
+    },
 ]
 
 const router = createRouter({
