@@ -201,9 +201,18 @@
                         <div class="text-caption opacity-90">{{ $t('services.aiAssistantSubtitle') }}</div>
                       </div>
                       <div class="d-flex align-center ga-2">
-                        <v-alert v-if="!authStore.isAuthenticated" type="info" variant="tonal" class="mb-6 rounded-xl" density="compact">
-                  {{ $t('services.guestLogin') }}
-                </v-alert>
+                        <v-btn
+                          v-if="simulatorStore.chatMessages.length > 0"
+                          size="small"
+                          color="white"
+                          variant="tonal"
+                          rounded="lg"
+                          :loading="simulatorStore.isThinking && !simulatorStore.chatInput"
+                          @click="handleGenerateReport"
+                        >
+                          <v-icon start size="small">mdi-file-document-outline</v-icon>
+                          {{ $t('services.generateReport') }}
+                        </v-btn>
                         <v-chip size="small" variant="outlined" color="white" class="session-badge">
                           {{ simulatorStore.chatSessionId ? $t('services.activeSession') : $t('services.newConsultation') }}
                         </v-chip>
@@ -381,6 +390,32 @@
 
     <app-footer />
     <bottom-nav />
+
+    <!-- Report Dialog -->
+    <v-dialog v-model="reportDialog" max-width="800" scrollable transition="dialog-bottom-transition">
+      <v-card rounded="xl" class="report-card">
+        <v-toolbar color="primary" class="px-4">
+          <v-icon color="white" class="mr-2">mdi-file-document-outline</v-icon>
+          <v-toolbar-title class="text-white font-weight-bold">{{ $t('services.clinicalReportTitle') }}</v-toolbar-title>
+          <v-spacer />
+          <v-btn icon="mdi-close" color="white" @click="reportDialog = false"></v-btn>
+        </v-toolbar>
+        <v-card-text class="pa-6">
+          <div class="markdown-body report-content" v-html="md.render(generatedReport)"></div>
+        </v-card-text>
+        <v-divider />
+        <v-card-actions class="pa-4">
+          <v-spacer />
+          <v-btn variant="tonal" color="primary" rounded="lg" @click="downloadReport">
+            <v-icon start>mdi-download</v-icon>
+            {{ $t('common.download') }}
+          </v-btn>
+          <v-btn variant="flat" color="primary" rounded="lg" @click="reportDialog = false">
+            {{ $t('common.close') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -391,10 +426,13 @@ import { useRoute } from 'vue-router'
 import { useSimulatorStore } from '@/stores/simulatorStore'
 import { useAppStore } from '@/stores/appStore'
 import { useAuthStore } from '@/stores/authStore'
+import { useTheme } from 'vuetify'
+import MarkdownIt from 'markdown-it'
+// @ts-ignore
+import html2pdf from 'html2pdf.js'
 import AppHeader from '@/components/AppHeader.vue'
 import AppFooter from '@/components/AppFooter.vue'
 import BottomNav from '@/components/BottomNav.vue'
-import MarkdownIt from 'markdown-it'
 import appointmentService, { Appointment } from '@/services/appointmentService'
 import diagnosisService, { Diagnosis } from '@/services/diagnosisService'
 
@@ -422,6 +460,60 @@ const latestReport = ref<Diagnosis | null>(null)
 // Session Renaming
 const editingSessionId = ref<string | null>(null)
 const editingTitle = ref('')
+
+// Report Generation
+const reportDialog = ref(false)
+const generatedReport = ref('')
+
+const handleGenerateReport = async () => {
+  try {
+    const report = await simulatorStore.generateReport()
+    if (report) {
+      generatedReport.value = report
+      reportDialog.value = true
+    }
+  } catch (err) {
+    appStore.showSnackbar('Error al generar el informe', 'error')
+  }
+}
+
+const downloadReport = () => {
+  const element = document.createElement('div')
+  element.className = 'pdf-report-container'
+  
+  // Header del informe clínico
+  const header = `
+    <div style="font-family: sans-serif; padding: 20px; color: #333;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #159a8e; padding-bottom: 10px; margin-bottom: 20px;">
+        <div>
+          <h1 style="color: #159a8e; margin: 0; font-size: 24px;">MediScan</h1>
+          <p style="margin: 0; font-size: 14px; color: #666;">Intelligent Medical Analysis System</p>
+        </div>
+        <div style="text-align: right;">
+          <p style="margin: 0; font-weight: bold;">Informe Clínico IA</p>
+          <p style="margin: 0; font-size: 12px;">Fecha: ${new Date().toLocaleDateString()}</p>
+        </div>
+      </div>
+      <div class="markdown-body">
+        ${md.render(generatedReport.value)}
+      </div>
+      <div style="margin-top: 40px; border-top: 1px solid #eee; padding-top: 10px; font-size: 10px; color: #999; text-align: center;">
+        Este informe ha sido generado por Inteligencia Artificial y debe ser revisado por un profesional colegiado.
+      </div>
+    </div>
+  `
+  element.innerHTML = header
+
+  const opt = {
+    margin: 1,
+    filename: `MediScan_Report_${new Date().toISOString().split('T')[0]}.pdf`,
+    image: { type: 'jpeg' as const, quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'in' as const, format: 'letter' as const, orientation: 'portrait' as const }
+  }
+
+  html2pdf().set(opt).from(element).save()
+}
 
 const startEditing = (session: any) => {
   editingSessionId.value = session.id

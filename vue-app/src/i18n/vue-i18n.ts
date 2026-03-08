@@ -31,6 +31,32 @@ const messages = {
       contactCTA: 'Contact Us',
       servicesTitle: 'Our Services',
       servicesSubtitle: 'Cutting-edge technology for better medical outcomes',
+      services: {
+        aiAnalysis: {
+          title: 'AI Analysis',
+          desc: 'Deep analysis of clinical images using advanced neural networks to identify patterns and anomalies.'
+        },
+        models3d: {
+          title: '3D Models',
+          desc: 'Interactive anatomical atlas and 3D volumetric reconstructions for better diagnostic visualization.'
+        },
+        reports: {
+          title: 'Smart Reports',
+          desc: 'Automated generation of detailed clinical findings and AI-powered health recommendations.'
+        },
+        telemedicine: {
+          title: 'Telemedicine',
+          desc: 'Secure communication channel with healthcare professionals for remote assistance and follow-up.'
+        },
+        tracking: {
+          title: 'Progress Tracking',
+          desc: 'Visual history and comparison of medical studies over time to monitor recovery progress.'
+        },
+        security: {
+          title: 'Data Security',
+          desc: 'End-to-end encryption for all medical records and results, ensuring your privacy at all times.'
+        }
+      },
       howTitle: 'How It Works',
       howSubtitle: 'Three simple steps to better health insights',
       steps: {
@@ -69,6 +95,8 @@ const messages = {
       initialAIMessage: 'Hello! I am your AI medical assistant. I can analyze images or answer questions about symptoms. How can I help you today?',
       attachImage: 'Attach Image',
       imageReadyForAnalysis: 'Image ready for analysis',
+      generateReport: 'Generate Clinical Report',
+      clinicalReportTitle: 'AI Generated Clinical Report',
       comingSoon: 'Coming Soon',
       underDevelopment: 'This feature is currently under development and will be available in future updates.',
       anatomicalAtlas3D: '3D Anatomical Atlas',
@@ -223,6 +251,10 @@ const messages = {
       required: 'This field is required',
       email: 'Invalid email address',
       minLength: 'Message too short (min {min} characters)',
+    },
+    common: {
+      download: 'Download',
+      close: 'Close'
     }
   },
   es: {
@@ -255,6 +287,32 @@ const messages = {
       contactCTA: 'Contáctanos',
       servicesTitle: 'Nuestros Servicios',
       servicesSubtitle: 'Tecnología de vanguardia para mejores resultados médicos',
+      services: {
+        aiAnalysis: {
+          title: 'Análisis con IA',
+          desc: 'Análisis profundo de imágenes clínicas mediante redes neuronales avanzadas para identificar patrones y anomalías.'
+        },
+        models3d: {
+          title: 'Modelos 3D',
+          desc: 'Atlas anatómico interactivo y reconstrucciones volumétricas 3D para una mejor visualización diagnóstica.'
+        },
+        reports: {
+          title: 'Informes Inteligentes',
+          desc: 'Generación automática de hallazgos clínicos detallados y recomendaciones de salud basadas en IA.'
+        },
+        telemedicine: {
+          title: 'Telemedicina',
+          desc: 'Canal de comunicación seguro con profesionales de la salud para asistencia remota y seguimiento.'
+        },
+        tracking: {
+          title: 'Seguimiento de Progreso',
+          desc: 'Historial visual y comparativa de estudios médicos a lo largo del tiempo para monitorizar la recuperación.'
+        },
+        security: {
+          title: 'Seguridad de Datos',
+          desc: 'Cifrado de extremo a extremo para todos los registros médicos y resultados, garantizando tu privacidad.'
+        }
+      },
       howTitle: 'Cómo Funciona',
       howSubtitle: 'Tres simples pasos para mejores conocimientos de salud',
       steps: {
@@ -293,6 +351,8 @@ const messages = {
       initialAIMessage: '¡Hola! Soy tu asistente médico AI. Puedo analizar imágenes o responder dudas sobre síntomas. ¿En qué puedo ayudarte hoy?',
       attachImage: 'Adjuntar Imagen',
       imageReadyForAnalysis: 'Imagen lista para analizar',
+      generateReport: 'Generar Informe Clínico',
+      clinicalReportTitle: 'Informe Clínico Generado por IA',
       comingSoon: 'Próximamente',
       underDevelopment: 'Esta función está actualmente en desarrollo y estará disponible en futuras actualizaciones.',
       anatomicalAtlas3D: 'Atlas Anatómico 3D',
@@ -447,6 +507,10 @@ const messages = {
       required: 'Este campo es obligatorio',
       email: 'Email no válido',
       minLength: 'Mensaje demasiado corto (mín. {min} caracteres)',
+    },
+    common: {
+      download: 'Descargar',
+      close: 'Cerrar'
     }
   }
 }

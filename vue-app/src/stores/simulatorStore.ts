@@ -200,7 +200,6 @@ export const useSimulatorStore = defineStore('simulator', {
                 )
                 this.addChatMessage('ai', result.aiResponse)
             } catch (err: any) {
-                // Handle 429 guest daily limit
                 const status = err?.response?.status
                 if (status === 429) {
                     const backendMsg = err?.response?.data?.message
@@ -215,6 +214,19 @@ export const useSimulatorStore = defineStore('simulator', {
                 }
             } finally {
                 this.isThinking = false
+            }
+        },
+        async generateReport() {
+            if (!this.chatSessionId) return null;
+            this.isThinking = true;
+            try {
+                const data = await chatService.generateReport(this.chatSessionId);
+                return data.report;
+            } catch (err) {
+                console.error("Error generating report", err);
+                throw err;
+            } finally {
+                this.isThinking = false;
             }
         }
     }

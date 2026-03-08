@@ -189,12 +189,12 @@ import AppFooter from '@/components/AppFooter.vue'
 import BottomNav from '@/components/BottomNav.vue'
 
 const services = [
-  { icon: 'mdi-file-find-outline', title: 'home.steps.uploadTitle', description: 'home.steps.uploadDesc', bg: 'rgba(21, 154, 142, 0.1)' },
-  { icon: 'mdi-cube-outline', title: 'home.steps.uploadTitle', description: 'home.steps.uploadDesc', bg: 'rgba(21, 154, 142, 0.1)' },
-  { icon: 'mdi-chart-bell-curve-cumulative', title: 'home.steps.uploadTitle', description: 'home.steps.uploadDesc', bg: 'rgba(21, 154, 142, 0.1)' },
-  { icon: 'mdi-doctor', title: 'home.steps.uploadTitle', description: 'home.steps.uploadDesc', bg: 'rgba(21, 154, 142, 0.1)' },
-  { icon: 'mdi-book-open-variant', title: 'home.steps.uploadTitle', description: 'home.steps.uploadDesc', bg: 'rgba(21, 154, 142, 0.1)' },
-  { icon: 'mdi-folder-eye-outline', title: 'home.steps.uploadTitle', description: 'home.steps.uploadDesc', bg: 'rgba(21, 154, 142, 0.1)' },
+  { icon: 'mdi-file-find-outline', title: 'home.services.aiAnalysis.title', description: 'home.services.aiAnalysis.desc', bg: 'rgba(21, 154, 142, 0.1)' },
+  { icon: 'mdi-cube-outline', title: 'home.services.models3d.title', description: 'home.services.models3d.desc', bg: 'rgba(21, 154, 142, 0.1)' },
+  { icon: 'mdi-chart-bell-curve-cumulative', title: 'home.services.reports.title', description: 'home.services.reports.desc', bg: 'rgba(21, 154, 142, 0.1)' },
+  { icon: 'mdi-doctor', title: 'home.services.telemedicine.title', description: 'home.services.telemedicine.desc', bg: 'rgba(21, 154, 142, 0.1)' },
+  { icon: 'mdi-book-open-variant', title: 'home.services.tracking.title', description: 'home.services.tracking.desc', bg: 'rgba(21, 154, 142, 0.1)' },
+  { icon: 'mdi-folder-eye-outline', title: 'home.services.security.title', description: 'home.services.security.desc', bg: 'rgba(21, 154, 142, 0.1)' },
 ]
 
 const steps = [

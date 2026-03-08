@@ -7,7 +7,7 @@ const apiClient: AxiosInstance = axios.create({
   }
 });
 
-// Attach JWT token to every request
+// Adjunta el JWT a cada petición
 apiClient.interceptors.request.use(config => {
   const token = localStorage.getItem('token');
   if (token && config.headers) {
@@ -16,7 +16,7 @@ apiClient.interceptors.request.use(config => {
   return config;
 }, error => Promise.reject(error));
 
-// Auto-logout on 401, surface error messages on other failures
+
 apiClient.interceptors.response.use(
   response => response,
   error => {
@@ -25,14 +25,14 @@ apiClient.interceptors.response.use(
       localStorage.removeItem('user');
       window.location.href = '/login';
     }
-    // Re-throw with a clean message from the backend or a default
+
     const message =
       error.response?.data?.message ||
       error.response?.data?.Message ||
       error.message ||
       'Network error. Please check if the backend is running.';
 
-    // Preserve the original AxiosError object so callers can read error.response.status
+
     error.message = message;
     return Promise.reject(error);
   }

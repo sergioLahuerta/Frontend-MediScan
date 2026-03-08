@@ -13,19 +13,13 @@ export interface GuestLimitError {
 }
 
 const chatService = {
-    /**
-     * Creates a new chat session on the backend (anonymous allowed).
-     * Returns the session Guid as a string.
-     */
+
     async createSession(): Promise<string> {
         const res = await apiClient.post<{ sessionId: string }>(`${BASE}/session`);
         return res.data.sessionId;
     },
 
-    /**
-     * Sends a message (and optional image file) to the AI.
-     * Uses multipart/form-data so the backend can receive the raw file.
-     */
+
     async sendMessage(
         sessionId: string,
         message: string,
@@ -62,6 +56,11 @@ const chatService = {
         await apiClient.patch(`${BASE}/${sessionId}/title`, JSON.stringify(title), {
             headers: { 'Content-Type': 'application/json' }
         });
+    },
+
+    async generateReport(sessionId: string): Promise<{ report: string }> {
+        const res = await apiClient.post<{ report: string }>(`${BASE}/${sessionId}/report`);
+        return res.data;
     }
 };
 

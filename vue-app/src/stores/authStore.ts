@@ -15,7 +15,6 @@ interface AuthState {
   error: string | null;
 }
 
-/** Decode a JWT token and return its payload as a plain object */
 function decodeJwt(token: string): Record<string, string> {
   try {
     const base64Payload = token.split('.')[1];
@@ -76,7 +75,6 @@ export const useAuthStore = defineStore('auth', {
       this.error = null;
       try {
         const data = await authService.register(userData);
-        // Auto-login after register if backend returns a token
         if (data?.token || data?.Token) {
           const token: string = data.token ?? data.Token;
           this.token = token;

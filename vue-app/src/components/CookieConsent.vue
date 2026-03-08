@@ -92,7 +92,7 @@ const declineCookies = () => {
 
 @media (max-width: 600px) {
   .cookie-consent-wrapper {
-    bottom: 80px; // Above mobile bottom nav
+    bottom: 80px;
     left: 12px;
     right: 12px;
     width: auto;
