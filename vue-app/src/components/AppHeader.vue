@@ -151,7 +151,8 @@ const { locale } = useI18n()
 const getFullImageUrl = (path: string) => {
   if (!path) return ''
   if (path.startsWith('http')) return path
-  const baseUrl = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5073/api').replace('/api', '')
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5073/api'
+  const baseUrl = apiUrl.replace(/\/api$/, '')
   return `${baseUrl}${path}`
 }
 
