@@ -1,41 +1,97 @@
-# MediScan - Medical Diagnosis with AI
+# MediScan Backend
 
-MediScan is a futuristic medical platform that uses Artificial Intelligence to improve diagnostic accuracy through interactive 3D visualization of medical images.
+## 📋 Descripción
 
-##  Despliegue con Docker
+MediScan Frontend es la pagina Web desarrollada con Vue y Vuetify, una web limpia, moderna y premium para la gestión médica integral. Implementa funciones de modo claro/oscuro y varios idiomas para asegurar que la UI de la página sea más sencilla y accesible.
 
-Para lanzar la aplicación completa, sigue estos pasos:
+## ✨ Características
 
-1. Asegúrate de tener **Docker** y **Docker Compose** instalados.
-2. Ejecuta el siguiente comando en la raíz del proyecto:
+- **Gestión de Usuarios**: Autenticación y autorización con roles (Admin, Profesional, Paciente)
+- **Chat IA en Tiempo Real**: Comunicación con chat de IA para brindarte un diagnostico temprano aunque no definitivo
+- **Generación de informes automáticos**: Generación de informe preliminar de diagnóstico en referencia a tus consultas a la IA (Con posibilidad de descargarlo en formato pdf).
+- **Diagnósticos y Tratamientos**: Registro de diagnósticos y tratamientos
+- **Citas Médicas**: Programación y gestión de appointments
+- **Contadores de Uso**: Monitoreo de uso de la plataforma
 
-```bash
-docker-compose build && docker-compose up
-```
+## 🛠️ Tecnologías Utilizadas
 
-La aplicación estará disponible en [http://localhost:8080](http://localhost:8080).
+- **Framework**: .NET 8 (ASP.NET Core Web API)
+- **Lenguaje**: C# 12
+- **Base de Datos**: MySQL (con scripts en `db/`)
+- **Arquitectura**: Clean Architecture (Core, Application, Infrastructure, Api)
+- **ORM**: Entity Framework Core
+- **Autenticación**: JWT Tokens
+- **Documentación API**: Swagger
 
-##  Credenciales de Prueba
+## 📋 Prerrequisitos
 
-Para acceder y probar las funcionalidades de la aplicación, utiliza las siguientes credenciales:
+- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [MySQL Server](https://dev.mysql.com/downloads/mysql/) o compatible
+- [Visual Studio 2022](https://visualstudio.microsoft.com/) o [VS Code](https://code.visualstudio.com/) con extensiones C#
 
-- **Usuario:** `admin@mediscan.com`
-- **Contraseña:** `admin1234`
+## 🚀 Instalación y Configuración
 
-- **Usuario:** `doctor@mediscan.com`
-- **Contraseña:** `doctor1234`
+1. Clonar los repositorios:
 
-##  Tecnologías Utilizadas
+### git clone https://github.com/sergioLahuerta/Backend-MediScan.git  
+### git clone https://github.com/sergioLahuerta/Frontend-MediScan.git  
 
-- **Frontend:** Vue 3, Vuetify 3, Pinia, Vue Router, Vite.
-- **Estilos:** SCSS / CSS.
-- **Infraestructura:** Docker, Nginx.
+2. En la raíz del repositorio del Backend-MediScan sacar el docker-compose.yaml para alojarlo al mismo nivel que sendos repositorios.  
 
-##  Estructura del Proyecto
+  - De esta forma:   
 
-- `vue-app/`: Aplicación frontend en Vue 3.
-- `docker-compose.yml`: Configuración de orquestación de contenedores.
-- `index.html`, `simulator.html`, `contact.html`: Versión estática original (legado).
+    <img width="270" height="175" alt="image" src="https://github.com/user-attachments/assets/d144b40d-7989-4061-a061-4b9b0a60b991" />  
+
+
+3. Con esa disposición, en una terminal en la ruta del docker-compose.yaml y los repositorios ->  
+### docker-compose up --build -d  
+
+
+4. Tras el mensaje de que están Started los tres contenedores, estará disponible:  
+
+### Web: http://localhost:8080  
+### Api Swagger: http://localhost:5073/swagger  
+
+
+
+## 📚 Documentación API
+
+Accede a Swagger UI en: `http://localhost:5073/swagger`
+
+### Endpoints Principales
+
+- **Auth**: `/api/auth/login`, `/api/auth/register`
+- **Servicios (IA)**: `/api/services`
+- **Perfil**: `/api/profile`
+- **Contacto**: `/api/contact`
+- **Política de proivacidad**: `/api/privacy`
+- **Terminos y Condiciones**: `/api/terms`
+
+## 👥 Usuarios de Prueba
+
+### Admin
+- **Email**: admin@mediscan.com
+- **Contraseña**: hashed_pass_123
+
+### Paciente
+- **Email**: juan.paciente@email.com
+- **Contraseña**: hashed_pass_456
+
+### Profesional Médico
+- **Email**: dra.martinez@mediscan.com
+- **Contraseña**: hashed_pass_789
+
+
+## 🤝 Contribuir
+
+Estamos abiertos a posibles mejoras y avances de la aplicación por parte de la comunidad.  
+Gracias.
+
+
+## 📞 Contacto
+
+Para preguntas o soporte, contacta al equipo de desarrollo.
 
 ---
-© 2026 MediScan. Todos los derechos reservados.
+
+*MediScan - Tecnología para una mejor atención médica*
