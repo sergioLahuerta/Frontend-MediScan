@@ -49,7 +49,7 @@ MediScan Frontend es la pagina Web desarrollada con Vue y Vuetify, una web limpi
 
 4. Tras el mensaje de que están Started los tres contenedores, estará disponible:  
 
-### Web: http://localhost:8080  
+### Web: http://localhost  
 ### Api Swagger: http://localhost:5073/swagger  
 
 
